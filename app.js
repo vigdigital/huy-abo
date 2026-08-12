@@ -13,6 +13,12 @@ const catOf = (id) => CATEGORIES.find((c) => c.id === id) || { name: "", color: 
 // Gán id ổn định cho từng sản phẩm (theo vị trí trong mảng)
 PRODUCTS.forEach((p, i) => (p.id = i));
 
+// Tra id sản phẩm theo mã hàng hóa (dùng cho đơn mẫu)
+const byCode = {};
+PRODUCTS.forEach((p) => {
+  if (p.code) byCode[p.code] = p.id;
+});
+
 // Ảnh placeholder từ chữ cái đầu (SVG inline, không cần file ngoài)
 function placeholder(p) {
   const c = catOf(p.category);
@@ -32,6 +38,7 @@ let activeCategory = "all";
 let searchTerm = "";
 let showNpp = localStorage.getItem("showNpp") === "1"; // hiện giá nhà phân phối
 const order = new Map(); // productId -> quantity
+const gifts = new Set(); // productId là hàng tặng (giá 0)
 
 /* ===================== Trang Sản phẩm ===================== */
 function renderChips() {
@@ -133,8 +140,10 @@ function addToOrder(id, qty = 1) {
 }
 
 function setQty(id, qty) {
-  if (qty <= 0) order.delete(id);
-  else order.set(id, qty);
+  if (qty <= 0) {
+    order.delete(id);
+    gifts.delete(id);
+  } else order.set(id, qty);
   renderOrder();
 }
 
@@ -149,14 +158,16 @@ function renderOrder() {
     .map((id) => {
       const p = PRODUCTS[id];
       const qty = order.get(id);
-      const line = p.price * qty;
-      const unitNpp = showNpp && p.priceNpp ? `<span class="order-unit-npp">NPP ${fmt(p.priceNpp)}</span>` : "";
-      const lineNpp = showNpp && p.priceNpp ? `<span class="line-npp">NPP ${fmt(p.priceNpp * qty)}</span>` : "";
+      const isGift = gifts.has(id);
+      const line = isGift ? 0 : p.price * qty;
+      const giftTag = isGift ? `<span class="gift-tag">Tặng</span>` : "";
+      const unitNpp = !isGift && showNpp && p.priceNpp ? `<span class="order-unit-npp">NPP ${fmt(p.priceNpp)}</span>` : "";
+      const lineNpp = !isGift && showNpp && p.priceNpp ? `<span class="line-npp">NPP ${fmt(p.priceNpp * qty)}</span>` : "";
       return `
       <div class="order-row">
         <img class="order-img" src="${imgSrc(p)}" alt="${p.name}" />
         <div class="order-info">
-          <h4 class="order-name">${p.name}</h4>
+          <h4 class="order-name">${p.name} ${giftTag}</h4>
           <span class="order-unit">${fmt(p.price)}</span>
           ${unitNpp}
         </div>
@@ -166,7 +177,7 @@ function renderOrder() {
           <button class="qty-btn" data-inc="${id}" aria-label="Tăng">+</button>
         </div>
         <div class="order-line">
-          <span class="line-total">${fmt(line)}</span>
+          <span class="line-total ${isGift ? "is-gift" : ""}">${isGift ? "Tặng" : fmt(line)}</span>
           ${lineNpp}
           <button class="line-remove" data-del="${id}" aria-label="Xóa">Xóa</button>
         </div>
@@ -190,8 +201,8 @@ function renderOrder() {
 
   // Tổng kết
   const totalItems = [...order.values()].reduce((a, b) => a + b, 0);
-  const totalMoney = ids.reduce((a, id) => a + PRODUCTS[id].price * order.get(id), 0);
-  const totalNpp = ids.reduce((a, id) => a + (PRODUCTS[id].priceNpp || 0) * order.get(id), 0);
+  const totalMoney = ids.reduce((a, id) => a + (gifts.has(id) ? 0 : PRODUCTS[id].price * order.get(id)), 0);
+  const totalNpp = ids.reduce((a, id) => a + (gifts.has(id) ? 0 : (PRODUCTS[id].priceNpp || 0) * order.get(id)), 0);
   const totalPv = ids.reduce((a, id) => a + (PRODUCTS[id].pv || 0) * order.get(id), 0);
   const totalBv = ids.reduce((a, id) => a + (PRODUCTS[id].bv || 0) * order.get(id), 0);
   $("#summary-count").textContent = totalItems;
@@ -204,6 +215,34 @@ function renderOrder() {
   const badge = $("#cart-badge");
   badge.textContent = totalItems;
   badge.hidden = totalItems === 0;
+}
+
+/* ===================== Đơn mẫu (template) ===================== */
+function renderTemplates() {
+  const wrap = $("#templates");
+  if (!wrap || typeof TEMPLATES === "undefined" || !TEMPLATES.length) return;
+  wrap.innerHTML =
+    `<span class="tpl-label">Đơn mẫu:</span>` +
+    TEMPLATES.map((t) => `<button class="tpl-btn" type="button" data-tpl="${t.id}">${t.name}</button>`).join("");
+  $$(".tpl-btn", wrap).forEach((btn) =>
+    btn.addEventListener("click", () => loadTemplate(btn.dataset.tpl))
+  );
+}
+
+function loadTemplate(id) {
+  const tpl = TEMPLATES.find((t) => t.id === id);
+  if (!tpl) return;
+  if (order.size && !confirm(`Nạp "${tpl.name}" và thay đơn hiện tại?`)) return;
+  order.clear();
+  gifts.clear();
+  tpl.items.forEach((it) => {
+    const pid = byCode[it.code];
+    if (pid == null) return;
+    order.set(pid, it.qty);
+    if (it.gift) gifts.add(pid);
+  });
+  renderOrder();
+  showView("order");
 }
 
 /* ===================== Điều hướng tab ===================== */
@@ -231,6 +270,7 @@ $("#add-to-order").addEventListener("click", () => {
 $("#clear-order").addEventListener("click", () => {
   if (confirm("Xóa toàn bộ đơn hàng?")) {
     order.clear();
+    gifts.clear();
     renderOrder();
   }
 });
@@ -248,5 +288,6 @@ $$(".tab").forEach((t) => t.addEventListener("click", () => showView(t.dataset.v
 
 renderChips();
 renderProducts();
+renderTemplates();
 renderOrderSelect();
 renderOrder();

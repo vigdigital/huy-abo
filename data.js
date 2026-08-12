@@ -368,3 +368,28 @@ const PRODUCTS = [
   { category: "home", name: "Hệ thống lọc nước eSpring (lõi lọc)",           price: 4850000, img: "" },
   { category: "home", name: "Bình đựng nước Amway (bộ)",                     price: 390000,  img: "" },
 ];
+
+/* ============================================================
+   ĐƠN MẪU (TEMPLATE) — combo pha sẵn số lượng
+   ------------------------------------------------------------
+   - Mỗi item trỏ tới sản phẩm bằng "code" (mã hàng hóa).
+   - qty  : số lượng.
+   - gift : true => hàng tặng, thành tiền = 0 (hiển thị "Tặng").
+   ============================================================ */
+const TEMPLATES = [
+  {
+    id: "ffit",
+    name: "Combo F.Fit",
+    items: [
+      { code: "124490", qty: 8 },  // BodyKey vị Sô Cô La
+      { code: "110415", qty: 10 }, // All Plant Protein Powder
+      { code: "117085", qty: 2 },  // GreenTrim
+      { code: "103050", qty: 1 },  // CB Plus
+      { code: "102736", qty: 4 },  // Fiber Powder (xơ bột)
+      { code: "126136", qty: 2 },  // Advanced Triple Omega-3
+      { code: "120843", qty: 2 },  // Double X (có khay)
+      { code: "120571", qty: 2 },  // Probiotic
+      { code: "328888", qty: 1, gift: true }, // Bình lắc — Tặng
+    ],
+  },
+];
