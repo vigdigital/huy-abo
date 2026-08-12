@@ -413,6 +413,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h9f/h66/10307460595742/124110_image_2_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/124110",
   },
+  {
+    category: "personal",
+    name: "Chỉ vệ sinh răng Glister",
+    code: "124112",
+    price: 174000,      // giá bán lẻ khuyến nghị
+    priceNpp: 158000,   // giá nhà phân phối
+    pv: 5.45,
+    bv: 146296,
+    img: "https://media.amway.com.vn/sys-master/images/h30/h8a/10325970190366/124112_image_3_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/124112",
+  },
   { category: "personal", name: "Dầu gội G&H Nourish+",                      price: 320000,  img: "" },
   { category: "personal", name: "Dầu xả G&H Nourish+",                       price: 320000,  img: "" },
   { category: "personal", name: "Sữa tắm G&H Refresh+",                      price: 295000,  img: "" },
