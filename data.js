@@ -229,6 +229,15 @@ const PRODUCTS = [
   },
   {
     category: "nutrilite",
+    name: "Bình lắc Nutrilite 710ml",
+    code: "328888",
+    price: 231000,      // giá bán lẻ khuyến nghị
+    priceNpp: 210000,   // giá nhà phân phối
+    img: "https://media.amway.com.vn/sys-master/images/hd5/h7b/11253436973086/328888-1_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/328888",
+  },
+  {
+    category: "nutrilite",
     name: "TPBVSK Nutrilite Advanced Triple Omega-3",
     code: "126136",
     price: 858000,      // giá bán lẻ khuyến nghị
