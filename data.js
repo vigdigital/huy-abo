@@ -201,7 +201,17 @@ const PRODUCTS = [
   { category: "nutrilite", name: "Nutrilite Multi-Carotene",                 price: 690000,  img: "" },
   { category: "nutrilite", name: "Nutrilite Garlic (Tỏi)",                   price: 545000,  img: "" },
   { category: "nutrilite", name: "Nutrilite Cà gai leo Milk Thistle",        price: 760000,  img: "" },
-  { category: "nutrilite", name: "Nutrilite Glucosamine",                    price: 815000,  img: "" },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Joint Health",
+    code: "104664",
+    price: 990000,      // giá bán lẻ khuyến nghị
+    priceNpp: 900000,   // giá nhà phân phối
+    pv: 31.1,
+    bv: 833333,
+    img: "https://media.amway.com.vn/sys-master/images/ha4/h27/10710265298974/104664-1_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/104664",
+  },
   {
     category: "nutrilite",
     name: "TP BVSK Nutrilite Fiber Powder",
