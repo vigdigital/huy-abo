@@ -103,6 +103,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h81/ha0/10864854106142/124490_Sep2024_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/124490",
   },
+  {
+    category: "nutrilite",
+    name: "BodyKey by Nutrilite – Vị Cà Phê",
+    code: "124492",
+    price: 1155000,     // giá bán lẻ khuyến nghị
+    priceNpp: 1050000,  // giá nhà phân phối
+    pv: 36.3,
+    bv: 972222,
+    img: "https://media.amway.com.vn/sys-master/images/hff/hdc/10941247193118/124492-241120_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/124492",
+  },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
