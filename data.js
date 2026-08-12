@@ -369,6 +369,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h2e/h5f/10868546732062/319372-1_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/319372",
   },
+  {
+    category: "personal",
+    name: "Xịt miệng Glister Mint",
+    code: "124111",
+    price: 150000,      // giá bán lẻ khuyến nghị
+    priceNpp: 136000,   // giá nhà phân phối
+    pv: 4.7,
+    bv: 125926,
+    img: "https://media.amway.com.vn/sys-master/images/h49/h1a/10292475232286/124111_image_1_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/124111",
+  },
   { category: "personal", name: "Nước súc miệng Glister",                    price: 245000,  img: "" },
   { category: "personal", name: "Dầu gội G&H Nourish+",                      price: 320000,  img: "" },
   { category: "personal", name: "Dầu xả G&H Nourish+",                       price: 320000,  img: "" },
