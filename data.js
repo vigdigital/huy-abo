@@ -202,7 +202,17 @@ const PRODUCTS = [
   { category: "nutrilite", name: "Nutrilite Garlic (Tỏi)",                   price: 545000,  img: "" },
   { category: "nutrilite", name: "Nutrilite Cà gai leo Milk Thistle",        price: 760000,  img: "" },
   { category: "nutrilite", name: "Nutrilite Glucosamine",                    price: 815000,  img: "" },
-  { category: "nutrilite", name: "Nutrilite Chất xơ hòa tan",                price: 505000,  img: "" },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Fiber Powder",
+    code: "102736",
+    price: 770000,      // giá bán lẻ khuyến nghị
+    priceNpp: 700000,   // giá nhà phân phối
+    pv: 24.2,
+    bv: 648148,
+    img: "https://media.amway.com.vn/sys-master/images/ha0/h2a/11334156156958/102736-20251031_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/102736",
+  },
 
   // ---------- Artistry ----------
   { category: "artistry", name: "Artistry Supreme LX Kem dưỡng",             price: 8900000, img: "" },
