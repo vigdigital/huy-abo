@@ -461,7 +461,17 @@ const PRODUCTS = [
   },
   { category: "personal", name: "Sữa dưỡng thể G&H Protect+",                price: 330000,  img: "" },
   { category: "personal", name: "Xà phòng G&H bánh (3 cục)",                 price: 210000,  img: "" },
-  { category: "personal", name: "Lăn khử mùi G&H",                           price: 185000,  img: "" },
+  {
+    category: "personal",
+    name: "Lăn khử mùi và giảm tiết mồ hôi G&H",
+    code: "125896",
+    price: 213000,      // giá bán lẻ khuyến nghị
+    priceNpp: 194000,   // giá nhà phân phối
+    pv: 6.7,
+    bv: 179630,
+    img: "https://media.amway.com.vn/sys-master/images/hc0/hd6/10746359775262/125896VN_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/125896",
+  },
   { category: "personal", name: "Nước rửa tay Glister",                      price: 175000,  img: "" },
 
   // ---------- Chăm sóc nhà cửa ----------
