@@ -426,7 +426,28 @@ const PRODUCTS = [
   },
   { category: "personal", name: "Dầu gội G&H Nourish+",                      price: 320000,  img: "" },
   { category: "personal", name: "Dầu xả G&H Nourish+",                       price: 320000,  img: "" },
-  { category: "personal", name: "Sữa tắm G&H Refresh+",                      price: 295000,  img: "" },
+  {
+    category: "personal",
+    name: "Sữa tắm dưỡng ẩm G&H",
+    code: "125890", // ⚠️ cần xác nhận: ảnh có tên file 126890
+    price: 257000,      // giá bán lẻ khuyến nghị
+    priceNpp: 234000,   // giá nhà phân phối
+    pv: 8.1,
+    bv: 216667,
+    img: "https://media.amway.com.vn/sys-master/images/hcc/hf0/10745298878494/126890VN_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/125890",
+  },
+  {
+    category: "personal",
+    name: "Sữa tắm tẩy tế bào chết G&H",
+    code: "125892",
+    price: 257000,      // giá bán lẻ khuyến nghị
+    priceNpp: 234000,   // giá nhà phân phối
+    pv: 8.1,
+    bv: 216667,
+    img: "https://media.amway.com.vn/sys-master/images/h51/h6c/10746169196574/125892VN_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/125892",
+  },
   { category: "personal", name: "Sữa dưỡng thể G&H Protect+",                price: 330000,  img: "" },
   { category: "personal", name: "Xà phòng G&H bánh (3 cục)",                 price: 210000,  img: "" },
   { category: "personal", name: "Lăn khử mùi G&H",                           price: 185000,  img: "" },
