@@ -483,6 +483,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h75/h14/10746364887070/125901VN_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/125901",
   },
+  {
+    category: "personal",
+    name: "Kem dưỡng ẩm da tay G&H",
+    code: "125902",
+    price: 249000,      // giá bán lẻ khuyến nghị
+    priceNpp: 226000,   // giá nhà phân phối
+    pv: 7.8,
+    bv: 209259,
+    img: "https://media.amway.com.vn/sys-master/images/h84/hc7/10746045759518/125902VN_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/125902",
+  },
   { category: "personal", name: "Nước rửa tay Glister",                      price: 175000,  img: "" },
 
   // ---------- Chăm sóc nhà cửa ----------
