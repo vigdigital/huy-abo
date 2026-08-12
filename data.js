@@ -429,7 +429,7 @@ const PRODUCTS = [
   {
     category: "personal",
     name: "Sữa tắm dưỡng ẩm G&H",
-    code: "125890", // ⚠️ cần xác nhận: ảnh có tên file 126890
+    code: "125890",
     price: 257000,      // giá bán lẻ khuyến nghị
     priceNpp: 234000,   // giá nhà phân phối
     pv: 8.1,
