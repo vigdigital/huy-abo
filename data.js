@@ -380,7 +380,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h49/h1a/10292475232286/124111_image_1_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/124111",
   },
-  { category: "personal", name: "Nước súc miệng Glister",                    price: 245000,  img: "" },
+  {
+    category: "personal",
+    name: "Nước súc miệng đậm đặc Glister",
+    code: "124108",
+    price: 297000,      // giá bán lẻ khuyến nghị
+    priceNpp: 270000,   // giá nhà phân phối
+    pv: 9.35,
+    bv: 250000,
+    img: "https://media.amway.com.vn/sys-master/images/h12/h22/10292459241502/124108_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/124108",
+  },
   { category: "personal", name: "Dầu gội G&H Nourish+",                      price: 320000,  img: "" },
   { category: "personal", name: "Dầu xả G&H Nourish+",                       price: 320000,  img: "" },
   { category: "personal", name: "Sữa tắm G&H Refresh+",                      price: 295000,  img: "" },
