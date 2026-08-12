@@ -509,7 +509,17 @@ const PRODUCTS = [
 
   // ---------- Chăm sóc nhà cửa ----------
   { category: "home", name: "Nước rửa chén Dish Drops",                      price: 285000,  img: "" },
-  { category: "home", name: "Nước giặt SA8 (1L)",                            price: 465000,  img: "" },
+  {
+    category: "home",
+    name: "Nước giặt đậm đặc SA8",
+    code: "112532",
+    price: 275000,      // giá bán lẻ khuyến nghị
+    priceNpp: 250000,   // giá nhà phân phối
+    pv: 8.65,
+    bv: 231481,
+    img: "https://media.amway.com.vn/sys-master/images/h1d/h0f/11396316332062/112532VN-20251223_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/112532",
+  },
   { category: "home", name: "Bột giặt SA8",                                  price: 520000,  img: "" },
   { category: "home", name: "Nước xả vải SA8",                               price: 310000,  img: "" },
   {
