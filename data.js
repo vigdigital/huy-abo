@@ -218,6 +218,17 @@ const PRODUCTS = [
   },
   {
     category: "nutrilite",
+    name: "TP BVSK Nutrilite Vitamin B Dual-Action",
+    code: "110171",
+    price: 506000,      // giá bán lẻ khuyến nghị
+    priceNpp: 460000,   // giá nhà phân phối
+    pv: 15.9,
+    bv: 425926,
+    img: "https://media.amway.com.vn/sys-master/images/h06/h22/10983052967966/110171-1_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/110171",
+  },
+  {
+    category: "nutrilite",
     name: "TPBVSK Nutrilite Advanced Triple Omega-3",
     code: "126136",
     price: 858000,      // giá bán lẻ khuyến nghị
