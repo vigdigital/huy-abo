@@ -77,14 +77,13 @@ function renderProducts() {
       const media = p.link
         ? `<a class="card-media" href="${p.link}" target="_blank" rel="noopener">${imgTag}</a>`
         : imgTag;
+      const activePrice = showNpp ? p.priceNpp ?? p.price : p.price;
       const pvbv =
-        p.pv != null || p.bv != null
+        showNpp && (p.pv != null || p.bv != null)
           ? `<div class="card-pvbv">${p.pv != null ? "PV " + fmtNum(p.pv) : ""}${
               p.pv != null && p.bv != null ? " · " : ""
             }${p.bv != null ? "BV " + fmtNum(p.bv) : ""}</div>`
           : "";
-      const nppLine =
-        showNpp && p.priceNpp ? `<div class="card-npp">NPP ${fmt(p.priceNpp)}</div>` : "";
       return `
       <article class="card">
         ${media}
@@ -93,10 +92,7 @@ function renderProducts() {
           <h3 class="card-name">${p.name}</h3>
           ${pvbv}
           <div class="card-foot">
-            <div class="card-prices">
-              <span class="card-price">${fmt(p.price)}</span>
-              ${nppLine}
-            </div>
+            <span class="card-price">${fmt(activePrice)}</span>
             <button class="btn-add" data-add="${p.id}" aria-label="Thêm vào đơn">+</button>
           </div>
         </div>
@@ -159,17 +155,15 @@ function renderOrder() {
       const p = PRODUCTS[id];
       const qty = order.get(id);
       const isGift = gifts.has(id);
-      const line = isGift ? 0 : p.price * qty;
+      const unit = showNpp ? p.priceNpp ?? p.price : p.price;
+      const line = isGift ? 0 : unit * qty;
       const giftTag = isGift ? `<span class="gift-tag">Tặng</span>` : "";
-      const unitNpp = !isGift && showNpp && p.priceNpp ? `<span class="order-unit-npp">NPP ${fmt(p.priceNpp)}</span>` : "";
-      const lineNpp = !isGift && showNpp && p.priceNpp ? `<span class="line-npp">NPP ${fmt(p.priceNpp * qty)}</span>` : "";
       return `
       <div class="order-row">
         <img class="order-img" src="${imgSrc(p)}" alt="${p.name}" />
         <div class="order-info">
           <h4 class="order-name">${p.name} ${giftTag}</h4>
-          <span class="order-unit">${fmt(p.price)}</span>
-          ${unitNpp}
+          <span class="order-unit">${fmt(unit)}</span>
         </div>
         <div class="qty">
           <button class="qty-btn" data-dec="${id}" aria-label="Giảm">−</button>
@@ -178,7 +172,6 @@ function renderOrder() {
         </div>
         <div class="order-line">
           <span class="line-total ${isGift ? "is-gift" : ""}">${isGift ? "Tặng" : fmt(line)}</span>
-          ${lineNpp}
           <button class="line-remove" data-del="${id}" aria-label="Xóa">Xóa</button>
         </div>
       </div>`;
@@ -201,16 +194,17 @@ function renderOrder() {
 
   // Tổng kết
   const totalItems = [...order.values()].reduce((a, b) => a + b, 0);
-  const totalMoney = ids.reduce((a, id) => a + (gifts.has(id) ? 0 : PRODUCTS[id].price * order.get(id)), 0);
-  const totalNpp = ids.reduce((a, id) => a + (gifts.has(id) ? 0 : (PRODUCTS[id].priceNpp || 0) * order.get(id)), 0);
+  const priceOf = (id) => (showNpp ? PRODUCTS[id].priceNpp ?? PRODUCTS[id].price : PRODUCTS[id].price);
+  const totalMoney = ids.reduce((a, id) => a + (gifts.has(id) ? 0 : priceOf(id) * order.get(id)), 0);
   const totalPv = ids.reduce((a, id) => a + (PRODUCTS[id].pv || 0) * order.get(id), 0);
   const totalBv = ids.reduce((a, id) => a + (PRODUCTS[id].bv || 0) * order.get(id), 0);
   $("#summary-count").textContent = totalItems;
   $("#summary-total").textContent = fmt(totalMoney);
+  $("#summary-total-label").textContent = showNpp ? "Tổng giá NPP" : "Tổng bán lẻ";
   $("#summary-pv").textContent = fmtNum(Math.round(totalPv * 100) / 100);
   $("#summary-bv").textContent = fmtNum(totalBv);
-  $("#row-npp").hidden = !showNpp;
-  $("#summary-npp").textContent = fmt(totalNpp);
+  $("#row-pv").hidden = !showNpp;
+  $("#row-bv").hidden = !showNpp;
 
   const badge = $("#cart-badge");
   badge.textContent = totalItems;
