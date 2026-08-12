@@ -169,6 +169,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h7a/h42/10764592152606/102578VN-240628_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/102578",
   },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Double X (có khay)",
+    code: "120843",
+    price: 1469000,     // giá bán lẻ khuyến nghị
+    priceNpp: 1335000,  // giá nhà phân phối
+    pv: 46.1,
+    bv: 1236111,
+    img: "https://media.amway.com.vn/sys-master/images/he3/hfa/11334161694750/120843VN-20251031_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/120843",
+  },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
