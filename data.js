@@ -59,6 +59,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h4e/h59/11159810506782/117085-20250530_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/117085",
   },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Heart Health CoQ10",
+    code: "860100",
+    price: 1168000,     // giá bán lẻ khuyến nghị
+    priceNpp: 1062000,  // giá nhà phân phối
+    pv: 36.7,
+    bv: 983333,
+    img: "https://media.amway.com.vn/sys-master/images/h46/h17/11110224986142/860100-20250415_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/860100",
+  },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
