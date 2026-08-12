@@ -20,8 +20,8 @@
 const CATEGORIES = [
   { id: "nutrilite",  name: "Nutrilite",            color: "#2E7D32" }, // Thực phẩm bổ sung
   { id: "artistry",   name: "Artistry",             color: "#C2185B" }, // Mỹ phẩm
-  { id: "personal",   name: "Chăm sóc cá nhân",     color: "#00838F" },
-  { id: "home",       name: "Chăm sóc nhà cửa",     color: "#F9A825" },
+  { id: "personal",   name: "Cá nhân",              color: "#00838F" },
+  { id: "home",       name: "Gia dụng",             color: "#F9A825" },
 ];
 
 const PRODUCTS = [
