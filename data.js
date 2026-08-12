@@ -194,7 +194,17 @@ const PRODUCTS = [
 
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
   { category: "nutrilite", name: "Nutrilite Vitamin C thẩm thấu chậm",       price: 585000,  img: "" },
-  { category: "nutrilite", name: "Nutrilite Calcium Magnesium",              price: 655000,  img: "" },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Cal Mag D",
+    code: "110610",
+    price: 715000,      // giá bán lẻ khuyến nghị
+    priceNpp: 650000,   // giá nhà phân phối
+    pv: 22.45,
+    bv: 601852,
+    img: "https://media.amway.com.vn/sys-master/images/hb2/h53/10658313535518/110610_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/110610",
+  },
   { category: "nutrilite", name: "Nutrilite Bổ sung sắt & Folic",            price: 430000,  img: "" },
   { category: "nutrilite", name: "Nutrilite Omega-3 (Salmon Omega)",         price: 720000,  img: "" },
   { category: "nutrilite", name: "Nutrilite Bio C 2:1",                      price: 615000,  img: "" },
