@@ -347,7 +347,17 @@ const PRODUCTS = [
   { category: "artistry", name: "Artistry Kem mắt Signature Select",         price: 1980000, img: "" },
 
   // ---------- Chăm sóc cá nhân ----------
-  { category: "personal", name: "Kem đánh răng Glister",                     price: 165000,  img: "" },
+  {
+    category: "personal",
+    name: "Kem đánh răng đa năng Glister Multi-Action",
+    code: "124106",
+    price: 153000,      // giá bán lẻ khuyến nghị
+    priceNpp: 139000,   // giá nhà phân phối
+    pv: 4.8,
+    bv: 128704,
+    img: "https://media.amway.com.vn/sys-master/images/h15/h7e/10292279771166/124106_001_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/124106",
+  },
   { category: "personal", name: "Nước súc miệng Glister",                    price: 245000,  img: "" },
   { category: "personal", name: "Dầu gội G&H Nourish+",                      price: 320000,  img: "" },
   { category: "personal", name: "Dầu xả G&H Nourish+",                       price: 320000,  img: "" },
