@@ -206,6 +206,17 @@ const PRODUCTS = [
   },
   {
     category: "nutrilite",
+    name: "TP BVSK Nutrilite Vitamin C Extended Release (180 viên)",
+    code: "109747",
+    price: 1089000,     // giá bán lẻ khuyến nghị
+    priceNpp: 990000,   // giá nhà phân phối
+    pv: 34.2,
+    bv: 916667,
+    img: "https://media.amway.com.vn/sys-master/images/h0a/h6f/10805878030366/109747-with-pill_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/109747",
+  },
+  {
+    category: "nutrilite",
     name: "TP BVSK Nutrilite Cal Mag D",
     code: "110610",
     price: 715000,      // giá bán lẻ khuyến nghị
