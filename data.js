@@ -213,6 +213,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/ha0/h2a/11334156156958/102736-20251031_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/102736",
   },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Daily",
+    code: "126009",
+    price: 292000,      // giá bán lẻ khuyến nghị
+    priceNpp: 265000,   // giá nhà phân phối
+    pv: 9.15,
+    bv: 245370,
+    img: "https://media.amway.com.vn/sys-master/images/h90/h19/10471543373854/126009VN_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/126009",
+  },
 
   // ---------- Artistry ----------
   { category: "artistry", name: "Artistry Supreme LX Kem dưỡng",             price: 8900000, img: "" },
