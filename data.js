@@ -81,6 +81,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h05/h54/10860313411614/A4261_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/426100",
   },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Liver Health",
+    code: "808400",
+    price: 959000,      // giá bán lẻ khuyến nghị
+    priceNpp: 872000,   // giá nhà phân phối
+    pv: 30.15,
+    bv: 807407,
+    img: "https://media.amway.com.vn/sys-master/images/h9b/h6e/10901770338334/A0804-Oct2024_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/808400",
+  },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
