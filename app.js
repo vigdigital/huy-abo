@@ -111,14 +111,20 @@ function renderProducts() {
 }
 
 /* ===================== Trang Đơn hàng ===================== */
-function renderOrderSelect() {
+function renderOrderSelect(term = "") {
+  const t = term.trim().toLowerCase();
   const sel = $("#order-product");
-  sel.innerHTML = CATEGORIES.map((c) => {
-    const opts = PRODUCTS.filter((p) => p.category === c.id)
+  const html = CATEGORIES.map((c) => {
+    const opts = PRODUCTS.filter(
+      (p) =>
+        p.category === c.id &&
+        (!t || p.name.toLowerCase().includes(t) || (p.code || "").includes(t))
+    )
       .map((p) => `<option value="${p.id}">${p.name} — ${fmt(p.price)}</option>`)
       .join("");
-    return `<optgroup label="${c.name}">${opts}</optgroup>`;
+    return opts ? `<optgroup label="${c.name}">${opts}</optgroup>` : "";
   }).join("");
+  sel.innerHTML = html || `<option value="" disabled>Không tìm thấy sản phẩm</option>`;
 }
 
 function addToOrder(id, qty = 1) {
@@ -214,8 +220,12 @@ $("#search").addEventListener("input", (e) => {
   renderProducts();
 });
 
+$("#order-search").addEventListener("input", (e) => renderOrderSelect(e.target.value));
+
 $("#add-to-order").addEventListener("click", () => {
-  addToOrder(Number($("#order-product").value));
+  const val = $("#order-product").value;
+  if (val === "") return;
+  addToOrder(Number(val));
 });
 
 $("#clear-order").addEventListener("click", () => {

@@ -13,7 +13,8 @@
    - Muốn thêm/bớt sản phẩm: thêm/xóa một dòng { ... } trong danh mục.
    - Muốn đổi danh mục: sửa "name" trong CATEGORIES (id giữ nguyên).
 
-   ⚠️ GIÁ BÊN DƯỚI LÀ GIÁ MẪU — hãy cập nhật theo bảng giá thật.
+   ⚠️ Nutrilite: dữ liệu THẬT. Artistry / Chăm sóc cá nhân / Chăm sóc nhà cửa
+      hiện vẫn là GIÁ MẪU — hãy cập nhật theo bảng giá thật.
    ============================================================ */
 
 const CATEGORIES = [
@@ -191,8 +192,6 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h64/h89/11289347751966/120844-20250926_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/120844",
   },
-
-  { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
   {
     category: "nutrilite",
     name: "TP BVSK Nutrilite Vitamin C Extended Release (60 viên)",
@@ -279,10 +278,6 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h94/h30/11334164414494/126136vn-20251031_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/126136",
   },
-  { category: "nutrilite", name: "Nutrilite Bio C 2:1",                      price: 615000,  img: "" },
-  { category: "nutrilite", name: "Nutrilite Multi-Carotene",                 price: 690000,  img: "" },
-  { category: "nutrilite", name: "Nutrilite Garlic (Tỏi)",                   price: 545000,  img: "" },
-  { category: "nutrilite", name: "Nutrilite Cà gai leo Milk Thistle",        price: 760000,  img: "" },
   {
     category: "nutrilite",
     name: "TP BVSK Nutrilite Joint Health",
