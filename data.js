@@ -1,11 +1,16 @@
 /* ============================================================
    DỮ LIỆU SẢN PHẨM AMWAY
    ------------------------------------------------------------
-   Cách sửa:
-   - Mỗi sản phẩm gồm: name (tên), price (giá bán lẻ, VNĐ), img (link hình).
-   - price: nhập số, KHÔNG cần dấu chấm/phẩy. Ví dụ 1250000.
-   - img: dán link ảnh (https://...). Để trống "" sẽ tự tạo ảnh chữ cái.
-   - link (tùy chọn): link trang gốc sản phẩm. Có link thì bấm ảnh sẽ mở trang đó.
+   Cách sửa (các trường của một sản phẩm):
+   - name     : tên sản phẩm (bắt buộc)
+   - price    : GIÁ BÁN LẺ khuyến nghị, VNĐ. Nhập số, không dấu chấm/phẩy. Ví dụ 1041000.
+   - priceNpp : GIÁ NHÀ PHÂN PHỐI (tùy chọn). Chỉ hiện khi bật toggle "Giá NPP".
+   - pv       : điểm PV (tùy chọn). Ví dụ 32.7
+   - bv       : điểm BV (tùy chọn). Ví dụ 875926
+   - img      : link ảnh (https://...). Để trống "" sẽ tự tạo ảnh chữ cái.
+   - link     : link trang gốc sản phẩm (tùy chọn). Có link thì bấm ảnh sẽ mở trang đó.
+   - code     : mã hàng hóa (tùy chọn), ví dụ "120571".
+   - desc     : mô tả ngắn (tùy chọn).
    - Muốn thêm/bớt sản phẩm: thêm/xóa một dòng { ... } trong danh mục.
    - Muốn đổi danh mục: sửa "name" trong CATEGORIES (id giữ nguyên).
 
@@ -22,7 +27,18 @@ const CATEGORIES = [
 const PRODUCTS = [
   // ---------- Nutrilite ----------
   // ✅ Dữ liệu THẬT (mẫu chuẩn) — lấy từ amway.com.vn/vn/p/120571
-  { category: "nutrilite", name: "TP BVSK Nutrilite Probiotic",              price: 1041000, img: "https://media.amway.com.vn/sys-master/images/h32/hcf/11177284141086/120571VN-20250616_amway-WF_Product_588Wx588H", link: "https://www.amway.com.vn/vn/p/120571" },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Probiotic",
+    code: "120571",
+    price: 1041000,     // giá bán lẻ khuyến nghị
+    priceNpp: 946000,   // giá nhà phân phối
+    pv: 32.7,
+    bv: 875926,
+    img: "https://media.amway.com.vn/sys-master/images/h32/hcf/11177284141086/120571VN-20250616_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/120571",
+    desc: "Nutrilite Probiotic là sản phẩm bổ sung lợi khuẩn hằng ngày phù hợp cho mọi thành viên trong gia đình nhằm hỗ trợ sự cân bằng hệ vi sinh đường ruột, hỗ trợ hệ tiêu hóa khỏe.",
+  },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },

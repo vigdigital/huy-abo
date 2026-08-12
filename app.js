@@ -4,6 +4,8 @@ const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
 // Định dạng tiền VNĐ
 const fmt = (n) => n.toLocaleString("vi-VN") + " ₫";
+// Định dạng số (PV/BV)
+const fmtNum = (n) => Number(n).toLocaleString("vi-VN");
 
 // Tìm danh mục theo id
 const catOf = (id) => CATEGORIES.find((c) => c.id === id) || { name: "", color: "#888" };
@@ -28,6 +30,7 @@ const imgSrc = (p) => (p.img && p.img.trim() ? p.img : placeholder(p));
 /* ===================== Trạng thái ===================== */
 let activeCategory = "all";
 let searchTerm = "";
+let showNpp = localStorage.getItem("showNpp") === "1"; // hiện giá nhà phân phối
 const order = new Map(); // productId -> quantity
 
 /* ===================== Trang Sản phẩm ===================== */
@@ -67,14 +70,26 @@ function renderProducts() {
       const media = p.link
         ? `<a class="card-media" href="${p.link}" target="_blank" rel="noopener">${imgTag}</a>`
         : imgTag;
+      const pvbv =
+        p.pv != null || p.bv != null
+          ? `<div class="card-pvbv">${p.pv != null ? "PV " + fmtNum(p.pv) : ""}${
+              p.pv != null && p.bv != null ? " · " : ""
+            }${p.bv != null ? "BV " + fmtNum(p.bv) : ""}</div>`
+          : "";
+      const nppLine =
+        showNpp && p.priceNpp ? `<div class="card-npp">NPP ${fmt(p.priceNpp)}</div>` : "";
       return `
       <article class="card">
         ${media}
         <div class="card-body">
           <span class="card-cat" style="color:${c.color}">${c.name}</span>
           <h3 class="card-name">${p.name}</h3>
+          ${pvbv}
           <div class="card-foot">
-            <span class="card-price">${fmt(p.price)}</span>
+            <div class="card-prices">
+              <span class="card-price">${fmt(p.price)}</span>
+              ${nppLine}
+            </div>
             <button class="btn-add" data-add="${p.id}" aria-label="Thêm vào đơn">+</button>
           </div>
         </div>
@@ -129,12 +144,15 @@ function renderOrder() {
       const p = PRODUCTS[id];
       const qty = order.get(id);
       const line = p.price * qty;
+      const unitNpp = showNpp && p.priceNpp ? `<span class="order-unit-npp">NPP ${fmt(p.priceNpp)}</span>` : "";
+      const lineNpp = showNpp && p.priceNpp ? `<span class="line-npp">NPP ${fmt(p.priceNpp * qty)}</span>` : "";
       return `
       <div class="order-row">
         <img class="order-img" src="${imgSrc(p)}" alt="${p.name}" />
         <div class="order-info">
           <h4 class="order-name">${p.name}</h4>
           <span class="order-unit">${fmt(p.price)}</span>
+          ${unitNpp}
         </div>
         <div class="qty">
           <button class="qty-btn" data-dec="${id}" aria-label="Giảm">−</button>
@@ -143,6 +161,7 @@ function renderOrder() {
         </div>
         <div class="order-line">
           <span class="line-total">${fmt(line)}</span>
+          ${lineNpp}
           <button class="line-remove" data-del="${id}" aria-label="Xóa">Xóa</button>
         </div>
       </div>`;
@@ -166,8 +185,15 @@ function renderOrder() {
   // Tổng kết
   const totalItems = [...order.values()].reduce((a, b) => a + b, 0);
   const totalMoney = ids.reduce((a, id) => a + PRODUCTS[id].price * order.get(id), 0);
+  const totalNpp = ids.reduce((a, id) => a + (PRODUCTS[id].priceNpp || 0) * order.get(id), 0);
+  const totalPv = ids.reduce((a, id) => a + (PRODUCTS[id].pv || 0) * order.get(id), 0);
+  const totalBv = ids.reduce((a, id) => a + (PRODUCTS[id].bv || 0) * order.get(id), 0);
   $("#summary-count").textContent = totalItems;
   $("#summary-total").textContent = fmt(totalMoney);
+  $("#summary-pv").textContent = fmtNum(Math.round(totalPv * 100) / 100);
+  $("#summary-bv").textContent = fmtNum(totalBv);
+  $("#row-npp").hidden = !showNpp;
+  $("#summary-npp").textContent = fmt(totalNpp);
 
   const badge = $("#cart-badge");
   badge.textContent = totalItems;
@@ -197,6 +223,15 @@ $("#clear-order").addEventListener("click", () => {
     order.clear();
     renderOrder();
   }
+});
+
+const nppToggle = $("#toggle-npp");
+nppToggle.checked = showNpp;
+nppToggle.addEventListener("change", () => {
+  showNpp = nppToggle.checked;
+  localStorage.setItem("showNpp", showNpp ? "1" : "0");
+  renderProducts();
+  renderOrder();
 });
 
 $$(".tab").forEach((t) => t.addEventListener("click", () => showView(t.dataset.view)));

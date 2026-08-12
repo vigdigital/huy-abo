@@ -14,6 +14,11 @@
       <span class="brand-mark">A</span>
       <span class="brand-name">Amway · Tra cứu giá</span>
     </div>
+    <label class="npp-toggle">
+      <span class="npp-text">Giá NPP</span>
+      <input type="checkbox" id="toggle-npp" />
+      <span class="npp-track"><span class="npp-thumb"></span></span>
+    </label>
   </header>
 
   <main>
@@ -48,8 +53,20 @@
           <span>Số mặt hàng</span>
           <span id="summary-count">0</span>
         </div>
+        <div class="summary-row sub">
+          <span>Tổng PV</span>
+          <span id="summary-pv">0</span>
+        </div>
+        <div class="summary-row sub">
+          <span>Tổng BV</span>
+          <span id="summary-bv">0</span>
+        </div>
+        <div class="summary-row sub" id="row-npp" hidden>
+          <span>Tổng giá NPP</span>
+          <span id="summary-npp">0 ₫</span>
+        </div>
         <div class="summary-row total">
-          <span>Tổng cộng</span>
+          <span>Tổng bán lẻ</span>
           <span id="summary-total">0 ₫</span>
         </div>
         <button id="clear-order" class="btn-ghost" type="button">Xóa toàn bộ đơn</button>
