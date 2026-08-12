@@ -63,9 +63,13 @@ function renderProducts() {
   list.innerHTML = items
     .map((p) => {
       const c = catOf(p.category);
+      const imgTag = `<img class="card-img" src="${imgSrc(p)}" alt="${p.name}" loading="lazy" />`;
+      const media = p.link
+        ? `<a class="card-media" href="${p.link}" target="_blank" rel="noopener">${imgTag}</a>`
+        : imgTag;
       return `
       <article class="card">
-        <img class="card-img" src="${imgSrc(p)}" alt="${p.name}" loading="lazy" />
+        ${media}
         <div class="card-body">
           <span class="card-cat" style="color:${c.color}">${c.name}</span>
           <h3 class="card-name">${p.name}</h3>

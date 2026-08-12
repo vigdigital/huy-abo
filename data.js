@@ -5,6 +5,7 @@
    - Mỗi sản phẩm gồm: name (tên), price (giá bán lẻ, VNĐ), img (link hình).
    - price: nhập số, KHÔNG cần dấu chấm/phẩy. Ví dụ 1250000.
    - img: dán link ảnh (https://...). Để trống "" sẽ tự tạo ảnh chữ cái.
+   - link (tùy chọn): link trang gốc sản phẩm. Có link thì bấm ảnh sẽ mở trang đó.
    - Muốn thêm/bớt sản phẩm: thêm/xóa một dòng { ... } trong danh mục.
    - Muốn đổi danh mục: sửa "name" trong CATEGORIES (id giữ nguyên).
 
@@ -20,6 +21,9 @@ const CATEGORIES = [
 
 const PRODUCTS = [
   // ---------- Nutrilite ----------
+  // ✅ Dữ liệu THẬT (mẫu chuẩn) — lấy từ amway.com.vn/vn/p/120571
+  { category: "nutrilite", name: "TP BVSK Nutrilite Probiotic",              price: 1041000, img: "https://media.amway.com.vn/sys-master/images/h32/hcf/11177284141086/120571VN-20250616_amway-WF_Product_588Wx588H", link: "https://www.amway.com.vn/vn/p/120571" },
+
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
   { category: "nutrilite", name: "Nutrilite Vitamin C thẩm thấu chậm",       price: 585000,  img: "" },
