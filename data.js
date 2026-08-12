@@ -158,6 +158,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h66/h0b/11266726363166/117580-20250905_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/117580",
   },
+  {
+    category: "nutrilite",
+    name: "Nutrilite Soy Protein Powder Mixed – Vị Trà Xanh",
+    code: "102578",
+    price: 943000,      // giá bán lẻ khuyến nghị
+    priceNpp: 857000,   // giá nhà phân phối
+    pv: 29.6,
+    bv: 793519,
+    img: "https://media.amway.com.vn/sys-master/images/h7a/h42/10764592152606/102578VN-240628_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/102578",
+  },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
