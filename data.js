@@ -92,6 +92,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h9b/h6e/10901770338334/A0804-Oct2024_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/808400",
   },
+  {
+    category: "nutrilite",
+    name: "BodyKey by Nutrilite – Vị Sô Cô La",
+    code: "124490",
+    price: 1010000,     // giá bán lẻ khuyến nghị
+    priceNpp: 918000,   // giá nhà phân phối
+    pv: 31.7,
+    bv: 850000,
+    img: "https://media.amway.com.vn/sys-master/images/h81/ha0/10864854106142/124490_Sep2024_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/124490",
+  },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
