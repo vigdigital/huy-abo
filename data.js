@@ -235,6 +235,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/hcc/hd6/11465472802846/123043-20260226-1400_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/123043",
   },
+  {
+    category: "nutrilite",
+    name: "TPBVSK Nutrilite Nutrikids Omega-3 Jelly",
+    code: "300920",
+    price: 660000,      // giá bán lẻ khuyến nghị
+    priceNpp: 600000,   // giá nhà phân phối
+    pv: 20.75,
+    bv: 555556,
+    img: "https://media.amway.com.vn/sys-master/images/h80/h64/10540061687838/300920_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/300920",
+  },
 
   // ---------- Artistry ----------
   { category: "artistry", name: "Artistry Supreme LX Kem dưỡng",             price: 8900000, img: "" },
