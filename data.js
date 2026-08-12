@@ -512,7 +512,17 @@ const PRODUCTS = [
   { category: "home", name: "Nước giặt SA8 (1L)",                            price: 465000,  img: "" },
   { category: "home", name: "Bột giặt SA8",                                  price: 520000,  img: "" },
   { category: "home", name: "Nước xả vải SA8",                               price: 310000,  img: "" },
-  { category: "home", name: "Chất tẩy rửa đa năng L.O.C.",                   price: 265000,  img: "" },
+  {
+    category: "home",
+    name: "Nước rửa đa năng L.O.C",
+    code: "000100",
+    price: 158000,      // giá bán lẻ khuyến nghị
+    priceNpp: 144000,   // giá nhà phân phối
+    pv: 5.0,
+    bv: 133333,
+    img: "https://media.amway.com.vn/sys-master/images/h26/h25/11396277075998/E0001VN-20251223_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/000100",
+  },
   { category: "home", name: "Nước lau kính L.O.C.",                          price: 240000,  img: "" },
   { category: "home", name: "Nước lau sàn L.O.C.",                           price: 275000,  img: "" },
   { category: "home", name: "Hệ thống lọc nước eSpring (lõi lọc)",           price: 4850000, img: "" },
