@@ -508,7 +508,17 @@ const PRODUCTS = [
   { category: "personal", name: "Nước rửa tay Glister",                      price: 175000,  img: "" },
 
   // ---------- Chăm sóc nhà cửa ----------
-  { category: "home", name: "Nước rửa chén Dish Drops",                      price: 285000,  img: "" },
+  {
+    category: "home",
+    name: "Nước rửa chén đậm đặc Dish Drops",
+    code: "110488",
+    price: 202000,      // giá bán lẻ khuyến nghị
+    priceNpp: 184000,   // giá nhà phân phối
+    pv: 6.35,
+    bv: 170370,
+    img: "https://media.amway.com.vn/sys-master/images/h26/h29/11396268752926/110488VN-20251223_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/110488",
+  },
   {
     category: "home",
     name: "Nước giặt đậm đặc SA8",
