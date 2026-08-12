@@ -10,7 +10,6 @@
    - img      : link ảnh (https://...). Để trống "" sẽ tự tạo ảnh chữ cái.
    - link     : link trang gốc sản phẩm (tùy chọn). Có link thì bấm ảnh sẽ mở trang đó.
    - code     : mã hàng hóa (tùy chọn), ví dụ "120571".
-   - desc     : mô tả ngắn (tùy chọn).
    - Muốn thêm/bớt sản phẩm: thêm/xóa một dòng { ... } trong danh mục.
    - Muốn đổi danh mục: sửa "name" trong CATEGORIES (id giữ nguyên).
 
@@ -37,7 +36,6 @@ const PRODUCTS = [
     bv: 875926,
     img: "https://media.amway.com.vn/sys-master/images/h32/hcf/11177284141086/120571VN-20250616_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/120571",
-    desc: "Nutrilite Probiotic là sản phẩm bổ sung lợi khuẩn hằng ngày phù hợp cho mọi thành viên trong gia đình nhằm hỗ trợ sự cân bằng hệ vi sinh đường ruột, hỗ trợ hệ tiêu hóa khỏe.",
   },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
