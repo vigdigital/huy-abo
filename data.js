@@ -521,6 +521,17 @@ const PRODUCTS = [
   },
   {
     category: "home",
+    name: "Bình xịt (pha L.O.C)",
+    code: "110483",
+    price: 57000,       // giá bán lẻ khuyến nghị
+    priceNpp: 52000,    // giá nhà phân phối
+    pv: 0.9,
+    bv: 24074,
+    img: "https://media.amway.com.vn/sys-master/images/h4f/h79/9031080345630/home_110483_1_Binh_xit_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/110483",
+  },
+  {
+    category: "home",
     name: "Nước giặt đậm đặc SA8",
     code: "112532",
     price: 275000,      // giá bán lẻ khuyến nghị
