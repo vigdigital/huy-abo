@@ -77,13 +77,14 @@ function renderProducts() {
       const media = p.link
         ? `<a class="card-media" href="${p.link}" target="_blank" rel="noopener">${imgTag}</a>`
         : imgTag;
-      const activePrice = showNpp ? p.priceNpp ?? p.price : p.price;
       const pvbv =
         showNpp && (p.pv != null || p.bv != null)
           ? `<div class="card-pvbv">${p.pv != null ? "PV " + fmtNum(p.pv) : ""}${
               p.pv != null && p.bv != null ? " · " : ""
             }${p.bv != null ? "BV " + fmtNum(p.bv) : ""}</div>`
           : "";
+      const nppLine =
+        showNpp && p.priceNpp ? `<div class="card-npp">NPP ${fmt(p.priceNpp)}</div>` : "";
       return `
       <article class="card">
         ${media}
@@ -92,7 +93,10 @@ function renderProducts() {
           <h3 class="card-name">${p.name}</h3>
           ${pvbv}
           <div class="card-foot">
-            <span class="card-price">${fmt(activePrice)}</span>
+            <div class="card-prices">
+              <span class="card-price">${fmt(p.price)}</span>
+              ${nppLine}
+            </div>
             <button class="btn-add" data-add="${p.id}" aria-label="Thêm vào đơn">+</button>
           </div>
         </div>
