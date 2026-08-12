@@ -206,7 +206,17 @@ const PRODUCTS = [
     link: "https://www.amway.com.vn/vn/p/110610",
   },
   { category: "nutrilite", name: "Nutrilite Bổ sung sắt & Folic",            price: 430000,  img: "" },
-  { category: "nutrilite", name: "Nutrilite Omega-3 (Salmon Omega)",         price: 720000,  img: "" },
+  {
+    category: "nutrilite",
+    name: "TPBVSK Nutrilite Advanced Triple Omega-3",
+    code: "126136",
+    price: 858000,      // giá bán lẻ khuyến nghị
+    priceNpp: 780000,   // giá nhà phân phối
+    pv: 26.95,
+    bv: 722222,
+    img: "https://media.amway.com.vn/sys-master/images/h94/h30/11334164414494/126136vn-20251031_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/126136",
+  },
   { category: "nutrilite", name: "Nutrilite Bio C 2:1",                      price: 615000,  img: "" },
   { category: "nutrilite", name: "Nutrilite Multi-Carotene",                 price: 690000,  img: "" },
   { category: "nutrilite", name: "Nutrilite Garlic (Tỏi)",                   price: 545000,  img: "" },
