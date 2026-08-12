@@ -349,7 +349,7 @@ const PRODUCTS = [
   // ---------- Chăm sóc cá nhân ----------
   {
     category: "personal",
-    name: "Kem đánh răng đa năng Glister Multi-Action",
+    name: "Kem đánh răng Glister - Bạc hà",
     code: "124106",
     price: 153000,      // giá bán lẻ khuyến nghị
     priceNpp: 139000,   // giá nhà phân phối
