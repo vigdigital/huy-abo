@@ -193,7 +193,17 @@ const PRODUCTS = [
   },
 
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
-  { category: "nutrilite", name: "Nutrilite Vitamin C thẩm thấu chậm",       price: 585000,  img: "" },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Vitamin C Extended Release (60 viên)",
+    code: "109745",
+    price: 407000,      // giá bán lẻ khuyến nghị
+    priceNpp: 370000,   // giá nhà phân phối
+    pv: 12.8,
+    bv: 342593,
+    img: "https://media.amway.com.vn/sys-master/images/hd9/h0b/10805882486814/c-extended-60-with-pill_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/109745",
+  },
   {
     category: "nutrilite",
     name: "TP BVSK Nutrilite Cal Mag D",
