@@ -147,6 +147,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h42/hf4/11334153371678/110415-20251031_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/110415",
   },
+  {
+    category: "nutrilite",
+    name: "Nutrilite Protein Powder – Vị Sô Cô La",
+    code: "117580",
+    price: 1005000,     // giá bán lẻ khuyến nghị
+    priceNpp: 914000,   // giá nhà phân phối
+    pv: 31.6,
+    bv: 846296,
+    img: "https://media.amway.com.vn/sys-master/images/h66/h0b/11266726363166/117580-20250905_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/117580",
+  },
 
   { category: "nutrilite", name: "Nutrilite Double X (hộp tiếp)",             price: 1855000, img: "" },
   { category: "nutrilite", name: "Nutrilite Protein thực vật",               price: 1290000, img: "" },
