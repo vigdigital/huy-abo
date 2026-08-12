@@ -13,8 +13,8 @@
    - Muốn thêm/bớt sản phẩm: thêm/xóa một dòng { ... } trong danh mục.
    - Muốn đổi danh mục: sửa "name" trong CATEGORIES (id giữ nguyên).
 
-   ⚠️ Nutrilite: dữ liệu THẬT. Artistry / Chăm sóc cá nhân / Chăm sóc nhà cửa
-      hiện vẫn là GIÁ MẪU — hãy cập nhật theo bảng giá thật.
+   Tất cả sản phẩm hiện là dữ liệu THẬT. Danh mục "Artistry" chưa có
+   sản phẩm nào — thêm khi có dữ liệu.
    ============================================================ */
 
 const CATEGORIES = [
@@ -335,16 +335,6 @@ const PRODUCTS = [
   },
 
   // ---------- Artistry ----------
-  { category: "artistry", name: "Artistry Supreme LX Kem dưỡng",             price: 8900000, img: "" },
-  { category: "artistry", name: "Artistry Signature Select Serum",           price: 2150000, img: "" },
-  { category: "artistry", name: "Artistry Hydra-V Gel dưỡng ẩm",             price: 1180000, img: "" },
-  { category: "artistry", name: "Artistry Ideal Radiance Kem chống nắng",    price: 990000,  img: "" },
-  { category: "artistry", name: "Artistry Sữa rửa mặt tạo bọt",              price: 720000,  img: "" },
-  { category: "artistry", name: "Artistry Nước hoa hồng cân bằng",           price: 680000,  img: "" },
-  { category: "artistry", name: "Artistry Studio Kem nền dạng lỏng",         price: 850000,  img: "" },
-  { category: "artistry", name: "Artistry Son môi Signature Color",          price: 620000,  img: "" },
-  { category: "artistry", name: "Artistry Mặt nạ dưỡng ẩm",                  price: 1050000, img: "" },
-  { category: "artistry", name: "Artistry Kem mắt Signature Select",         price: 1980000, img: "" },
 
   // ---------- Chăm sóc cá nhân ----------
   {
@@ -424,8 +414,6 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h30/h8a/10325970190366/124112_image_3_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/124112",
   },
-  { category: "personal", name: "Dầu gội G&H Nourish+",                      price: 320000,  img: "" },
-  { category: "personal", name: "Dầu xả G&H Nourish+",                       price: 320000,  img: "" },
   {
     category: "personal",
     name: "Sữa tắm dưỡng ẩm G&H",
@@ -459,8 +447,6 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/hfe/h1e/10746351910942/125894VN_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/125894",
   },
-  { category: "personal", name: "Sữa dưỡng thể G&H Protect+",                price: 330000,  img: "" },
-  { category: "personal", name: "Xà phòng G&H bánh (3 cục)",                 price: 210000,  img: "" },
   {
     category: "personal",
     name: "Lăn khử mùi và giảm tiết mồ hôi G&H",
@@ -505,7 +491,6 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/hfc/h23/10744893407262/126308VN_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/126308",
   },
-  { category: "personal", name: "Nước rửa tay Glister",                      price: 175000,  img: "" },
 
   // ---------- Chăm sóc nhà cửa ----------
   {
@@ -552,8 +537,6 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h1d/h0f/11396316332062/112532VN-20251223_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/112532",
   },
-  { category: "home", name: "Bột giặt SA8",                                  price: 520000,  img: "" },
-  { category: "home", name: "Nước xả vải SA8",                               price: 310000,  img: "" },
   {
     category: "home",
     name: "Nước rửa đa năng L.O.C",
@@ -565,10 +548,6 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h26/h25/11396277075998/E0001VN-20251223_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/000100",
   },
-  { category: "home", name: "Nước lau kính L.O.C.",                          price: 240000,  img: "" },
-  { category: "home", name: "Nước lau sàn L.O.C.",                           price: 275000,  img: "" },
-  { category: "home", name: "Hệ thống lọc nước eSpring (lõi lọc)",           price: 4850000, img: "" },
-  { category: "home", name: "Bình đựng nước Amway (bộ)",                     price: 390000,  img: "" },
 ];
 
 /* ============================================================
