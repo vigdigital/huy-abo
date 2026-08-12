@@ -205,7 +205,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/hb2/h53/10658313535518/110610_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/110610",
   },
-  { category: "nutrilite", name: "Nutrilite Bổ sung sắt & Folic",            price: 430000,  img: "" },
+  {
+    category: "nutrilite",
+    name: "TP BVSK Nutrilite Iron Folic",
+    code: "102046",
+    price: 281000,      // giá bán lẻ khuyến nghị
+    priceNpp: 255000,   // giá nhà phân phối
+    pv: 8.8,
+    bv: 236111,
+    img: "https://media.amway.com.vn/sys-master/images/hc4/h49/10868156006430/102046-1_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/102046",
+  },
   {
     category: "nutrilite",
     name: "TPBVSK Nutrilite Advanced Triple Omega-3",
