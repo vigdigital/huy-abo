@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0057B8" />
+  <title>Tra cứu giá Amway</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230057B8%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>A</text></svg>" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark">A</span>
+      <span class="brand-name">Amway · Tra cứu giá</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Trang Sản phẩm ===== -->
+    <section id="view-products" class="view">
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" class="search-ico" aria-hidden="true"><path d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="search" type="search" inputmode="search" placeholder="Tìm sản phẩm..." autocomplete="off" />
+        </div>
+        <div id="category-chips" class="chips"></div>
+      </div>
+      <div id="product-list" class="product-list"></div>
+      <p id="empty-products" class="empty" hidden>Không tìm thấy sản phẩm phù hợp.</p>
+    </section>
+
+    <!-- ===== Trang Đơn hàng ===== -->
+    <section id="view-order" class="view" hidden>
+      <div class="order-add">
+        <label class="field">
+          <span class="field-label">Chọn sản phẩm</span>
+          <select id="order-product"></select>
+        </label>
+        <button id="add-to-order" class="btn-primary" type="button">+ Thêm vào đơn</button>
+      </div>
+
+      <div id="order-items" class="order-items"></div>
+      <p id="empty-order" class="empty">Chưa có sản phẩm nào trong đơn.</p>
+
+      <div id="order-summary" class="order-summary" hidden>
+        <div class="summary-row">
+          <span>Số mặt hàng</span>
+          <span id="summary-count">0</span>
+        </div>
+        <div class="summary-row total">
+          <span>Tổng cộng</span>
+          <span id="summary-total">0 ₫</span>
+        </div>
+        <button id="clear-order" class="btn-ghost" type="button">Xóa toàn bộ đơn</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Thanh điều hướng dưới (mobile) ===== -->
+  <nav class="tabbar">
+    <button class="tab active" data-view="products" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Sản phẩm</span>
+    </button>
+    <button class="tab" data-view="order" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.6" fill="currentColor"/><circle cx="18" cy="20" r="1.6" fill="currentColor"/><path d="M6 6L5 3H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Đơn hàng</span>
+      <span id="cart-badge" class="badge" hidden>0</span>
+    </button>
+  </nav>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
