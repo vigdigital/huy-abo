@@ -358,6 +358,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h15/h7e/10292279771166/124106_001_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/124106",
   },
+  {
+    category: "personal",
+    name: "Kem đánh răng Glister - Trà trắng",
+    code: "319372",
+    price: 153000,      // giá bán lẻ khuyến nghị
+    priceNpp: 139000,   // giá nhà phân phối
+    pv: 4.8,
+    bv: 128704,
+    img: "https://media.amway.com.vn/sys-master/images/h2e/h5f/10868546732062/319372-1_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/319372",
+  },
   { category: "personal", name: "Nước súc miệng Glister",                    price: 245000,  img: "" },
   { category: "personal", name: "Dầu gội G&H Nourish+",                      price: 320000,  img: "" },
   { category: "personal", name: "Dầu xả G&H Nourish+",                       price: 320000,  img: "" },
