@@ -494,6 +494,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h84/hc7/10746045759518/125902VN_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/125902",
   },
+  {
+    category: "personal",
+    name: "Sữa tắm gội cho bé G&H",
+    code: "126308",
+    price: 314000,      // giá bán lẻ khuyến nghị
+    priceNpp: 285000,   // giá nhà phân phối
+    pv: 9.85,
+    bv: 263889,
+    img: "https://media.amway.com.vn/sys-master/images/hfc/h23/10744893407262/126308VN_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/126308",
+  },
   { category: "personal", name: "Nước rửa tay Glister",                      price: 175000,  img: "" },
 
   // ---------- Chăm sóc nhà cửa ----------
