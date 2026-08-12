@@ -532,6 +532,17 @@ const PRODUCTS = [
   },
   {
     category: "home",
+    name: "Bình pha loãng (Dish Drops)",
+    code: "110487",
+    price: 50000,       // giá bán lẻ khuyến nghị
+    priceNpp: 45000,    // giá nhà phân phối
+    pv: 0.8,
+    bv: 20833,
+    img: "https://media.amway.com.vn/sys-master/images/h93/h57/9031085817886/home_110487_1_Binh_pha_loang_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/110487",
+  },
+  {
+    category: "home",
     name: "Nước giặt đậm đặc SA8",
     code: "112532",
     price: 275000,      // giá bán lẻ khuyến nghị
