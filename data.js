@@ -238,6 +238,17 @@ const PRODUCTS = [
   },
   {
     category: "nutrilite",
+    name: "TP BVSK Nutrilite Vision Health Plus",
+    code: "124321",
+    price: 913000,      // giá bán lẻ khuyến nghị
+    priceNpp: 830000,   // giá nhà phân phối
+    pv: 28.7,
+    bv: 768519,
+    img: "https://media.amway.com.vn/sys-master/images/h77/h41/11246109065246/124321_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/124321",
+  },
+  {
+    category: "nutrilite",
     name: "TPBVSK Nutrilite Advanced Triple Omega-3",
     code: "126136",
     price: 858000,      // giá bán lẻ khuyến nghị
