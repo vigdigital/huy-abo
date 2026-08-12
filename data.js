@@ -448,6 +448,17 @@ const PRODUCTS = [
     img: "https://media.amway.com.vn/sys-master/images/h51/h6c/10746169196574/125892VN_amway-WF_Product_588Wx588H",
     link: "https://www.amway.com.vn/vn/p/125892",
   },
+  {
+    category: "personal",
+    name: "Xà phòng rửa tay đậm đặc G&H",
+    code: "125894",
+    price: 227000,      // giá bán lẻ khuyến nghị
+    priceNpp: 206000,   // giá nhà phân phối
+    pv: 7.1,
+    bv: 190741,
+    img: "https://media.amway.com.vn/sys-master/images/hfe/h1e/10746351910942/125894VN_amway-WF_Product_588Wx588H",
+    link: "https://www.amway.com.vn/vn/p/125894",
+  },
   { category: "personal", name: "Sữa dưỡng thể G&H Protect+",                price: 330000,  img: "" },
   { category: "personal", name: "Xà phòng G&H bánh (3 cục)",                 price: 210000,  img: "" },
   { category: "personal", name: "Lăn khử mùi G&H",                           price: 185000,  img: "" },
