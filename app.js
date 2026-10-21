@@ -243,10 +243,45 @@ function loadTemplate(id) {
   showView("order");
 }
 
+/* ===================== Liên kết ===================== */
+function hostOf(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+function renderLinks() {
+  if (typeof LINKS === "undefined") return;
+  const wrap = $("#links-list");
+  $("#empty-links").hidden = LINKS.length !== 0;
+  const groups = LINK_GROUPS.filter((g) => LINKS.some((l) => l.group === g.id));
+  wrap.innerHTML = groups
+    .map((g) => {
+      const items = LINKS.filter((l) => l.group === g.id)
+        .map(
+          (l) => `
+        <a class="link-card" href="${l.url}" target="_blank" rel="noopener">
+          <div class="link-main">
+            <span class="link-title">${l.title}</span>
+            ${l.note ? `<span class="link-note">${l.note}</span>` : ""}
+            <span class="link-url">${hostOf(l.url)}</span>
+          </div>
+          <svg class="link-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>`
+        )
+        .join("");
+      return `<section class="link-group"><h2 class="link-group-title">${g.name}</h2>${items}</section>`;
+    })
+    .join("");
+}
+
 /* ===================== Điều hướng tab ===================== */
 function showView(view) {
   $("#view-products").hidden = view !== "products";
   $("#view-order").hidden = view !== "order";
+  $("#view-links").hidden = view !== "links";
   $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
   window.scrollTo({ top: 0 });
 }
@@ -289,3 +324,4 @@ renderProducts();
 renderTemplates();
 renderOrderSelect();
 renderOrder();
+renderLinks();
