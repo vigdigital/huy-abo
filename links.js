@@ -15,4 +15,6 @@ const LINK_GROUPS = [
 
 const LINKS = [
   { group: "product", title: "Máy lọc nước eSpring", url: "https://www.facebook.com/share/p/1KNiuRAZ8b/?mibextid=wwXIfr", note: "Bài giới thiệu (Facebook)" },
+
+  { group: "business", title: "Kinh doanh Amway bằng Tái tiêu dùng", url: "https://www.facebook.com/share/v/1E9i2bHPrn/?mibextid=wwXIfr", note: "Video (Facebook)" },
 ];
