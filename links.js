@@ -14,6 +14,5 @@ const LINK_GROUPS = [
 ];
 
 const LINKS = [
-  // Ví dụ:
-  // { group: "product", title: "Catalogue Nutrilite", url: "https://...", note: "PDF" },
+  { group: "product", title: "Máy lọc nước eSpring", url: "https://www.facebook.com/share/p/1KNiuRAZ8b/?mibextid=wwXIfr", note: "Bài giới thiệu (Facebook)" },
 ];
