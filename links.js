@@ -16,6 +16,7 @@ const LINK_GROUPS = [
 const LINKS = [
   { group: "product", title: "Máy lọc nước eSpring", url: "https://www.facebook.com/share/p/1KNiuRAZ8b/?mibextid=wwXIfr", note: "Bài giới thiệu (Facebook)" },
   { group: "product", title: "Máy lọc không khí Atmosphere Mini", url: "https://www.facebook.com/share/r/1Dq7ZTcLho/?mibextid=wwXIfr", note: "Video (Facebook)" },
+  { group: "product", title: "Satinique - chăm sóc tóc gãy rụng", url: "https://www.facebook.com/reel/29039204759055434", note: "Video (Facebook)" },
 
   { group: "business", title: "Kinh doanh Amway bằng Tái tiêu dùng", url: "https://www.facebook.com/share/v/1E9i2bHPrn/?mibextid=wwXIfr", note: "Video (Facebook)" },
 ];
