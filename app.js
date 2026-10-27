@@ -153,6 +153,7 @@ function renderOrder() {
 
   $("#empty-order").hidden = ids.length !== 0;
   $("#order-summary").hidden = ids.length === 0;
+  $("#payment").hidden = ids.length === 0;
 
   wrap.innerHTML = ids
     .map((id) => {
@@ -315,6 +316,29 @@ nppToggle.addEventListener("change", () => {
   localStorage.setItem("showNpp", showNpp ? "1" : "0");
   renderProducts();
   renderOrder();
+});
+
+// Sao chép số tài khoản
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".copy-btn");
+  if (!btn) return;
+  const text = btn.dataset.copy;
+  const done = () => {
+    const old = btn.textContent;
+    btn.textContent = "Đã chép ✓";
+    setTimeout(() => (btn.textContent = old), 1200);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(done);
+  } else {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (_) {}
+    document.body.removeChild(ta);
+    done();
+  }
 });
 
 $$(".tab").forEach((t) => t.addEventListener("click", () => showView(t.dataset.view)));
