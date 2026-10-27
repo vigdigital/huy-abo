@@ -153,7 +153,6 @@ function renderOrder() {
 
   $("#empty-order").hidden = ids.length !== 0;
   $("#order-summary").hidden = ids.length === 0;
-  $("#payment").hidden = ids.length === 0;
 
   wrap.innerHTML = ids
     .map((id) => {
