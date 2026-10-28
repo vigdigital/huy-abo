@@ -20,4 +20,5 @@ const LINKS = [
   { group: "product", title: "Minh hoạ sữa tắm G&H", url: "https://www.facebook.com/share/v/19U8o7cpye/?mibextid=wwXIfr", note: "Video (Facebook)" },
 
   { group: "business", title: "Kinh doanh Amway bằng Tái tiêu dùng", url: "https://www.facebook.com/share/v/1E9i2bHPrn/?mibextid=wwXIfr", note: "Video (Facebook)" },
+  { group: "business", title: "Câu chuyện thành công - Diamond Tâm & Tuyến", url: "https://www.facebook.com/share/v/1GusPU6gUc/?mibextid=wwXIfr", note: "Video (Facebook)" },
 ];
