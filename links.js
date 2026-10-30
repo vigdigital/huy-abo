@@ -19,6 +19,7 @@ const LINKS = [
   { group: "product", title: "Satinique - chăm sóc tóc gãy rụng", url: "https://www.facebook.com/reel/29039204759055434", note: "Video (Facebook)" },
   { group: "product", title: "Minh hoạ sữa tắm G&H", url: "https://www.facebook.com/share/v/19U8o7cpye/?mibextid=wwXIfr", note: "Video (Facebook)" },
   { group: "product", title: "eSpring - Lõi lọc trước và sau khi sử dụng", url: "https://www.facebook.com/share/p/1FR6YkkkHx/", note: "Bài viết (Facebook)" },
+  { group: "product", title: "Chất lượng lõi carbon New eSpring", url: "https://www.facebook.com/share/v/1QsE6am1GK/", note: "Video (Facebook)" },
 
   { group: "business", title: "Kinh doanh Amway bằng Tái tiêu dùng", url: "https://www.facebook.com/share/v/1E9i2bHPrn/?mibextid=wwXIfr", note: "Video (Facebook)" },
   { group: "business", title: "Câu chuyện thành công - Diamond Tâm & Tuyến", url: "https://www.facebook.com/share/v/1GusPU6gUc/?mibextid=wwXIfr", note: "Video (Facebook)" },
