@@ -308,6 +308,16 @@ main { max-width: 640px; margin: 0 auto; }
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
 }
 .btn-block svg { width: 18px; height: 18px; }
+
+/* Hàng nút cuối trang đơn hàng */
+.order-actions {
+  display: flex; gap: 8px;
+  margin: 12px 14px 18px;
+}
+.order-actions .btn-ghost,
+.order-actions .btn-block { margin-top: 0; }
+.order-actions .btn-ghost { flex: 1; }
+.order-actions .btn-block { flex: 2; }
 .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
 .summary-row.sub { font-size: 13px; color: var(--muted); padding: 4px 0; }
 .summary-row.total {

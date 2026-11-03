@@ -177,6 +177,7 @@ function renderOrder() {
 
   $("#empty-order").hidden = ids.length !== 0;
   $("#order-summary").hidden = ids.length === 0;
+  $("#order-actions").hidden = ids.length === 0;
 
   wrap.innerHTML = ids
     .map((id) => {
@@ -362,7 +363,7 @@ document.addEventListener("click", (e) => {
 
 /* ===================== Xuất ảnh đơn (bill) ===================== */
 const qrImg = new Image();
-qrImg.src = "assets/qr-acb.jpg?v=13";
+qrImg.src = "assets/qr-acb.jpg?v=14";
 
 function rr(ctx, x, y, w, h, r) {
   ctx.beginPath();
