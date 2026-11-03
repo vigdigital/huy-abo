@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0057B8" />
   <title>Tra cứu giá Amway</title>
-  <link rel="stylesheet" href="styles.css?v=12" />
+  <link rel="stylesheet" href="styles.css?v=13" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230057B8%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>A</text></svg>" />
 </head>
 <body>
@@ -37,14 +37,13 @@
 
     <!-- ===== Trang Đơn hàng ===== -->
     <section id="view-order" class="view" hidden>
-      <div id="templates" class="templates"></div>
       <div class="order-add">
-        <label class="field">
-          <span class="field-label">Chọn sản phẩm</span>
-          <input id="order-search" type="search" inputmode="search" placeholder="Tìm sản phẩm hoặc mã..." autocomplete="off" />
-          <select id="order-product"></select>
-        </label>
-        <button id="add-to-order" class="btn-primary" type="button">+ Thêm</button>
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" class="search-ico" aria-hidden="true"><path d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="order-search" type="search" inputmode="search" placeholder="Thêm sản phẩm: gõ tên hoặc mã..." autocomplete="off" />
+        </div>
+        <div id="order-results" class="order-results" hidden></div>
+        <div id="templates" class="templates"></div>
       </div>
 
       <div id="order-items" class="order-items"></div>
@@ -76,7 +75,7 @@
 
       <div id="payment" class="payment">
         <h3 class="payment-title">Thanh toán chuyển khoản</h3>
-        <img class="payment-qr" src="assets/qr-acb.jpg?v=12" alt="Mã QR chuyển khoản ACB - Võ Minh Huy" />
+        <img class="payment-qr" src="assets/qr-acb.jpg?v=13" alt="Mã QR chuyển khoản ACB - Võ Minh Huy" />
         <div class="payment-info">
           <div class="pay-row"><span>Ngân hàng</span><b>ACB</b></div>
           <div class="pay-row"><span>Chủ tài khoản</span><b>Võ Minh Huy</b></div>
@@ -114,8 +113,8 @@
     </button>
   </nav>
 
-  <script src="data.js?v=12"></script>
-  <script src="links.js?v=12"></script>
-  <script src="app.js?v=12"></script>
+  <script src="data.js?v=13"></script>
+  <script src="links.js?v=13"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>

@@ -7,6 +7,11 @@ const fmt = (n) => n.toLocaleString("vi-VN") + " ₫";
 // Định dạng số (PV/BV)
 const fmtNum = (n) => Number(n).toLocaleString("vi-VN");
 
+// Chuẩn hoá để tìm kiếm không phân biệt dấu/hoa thường ("kem danh rang" khớp "Kem đánh răng")
+const norm = (s) =>
+  s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d");
+const matches = (p, t) => norm(p.name).includes(t) || (p.code || "").includes(t);
+
 // Tìm danh mục theo id
 const catOf = (id) => CATEGORIES.find((c) => c.id === id) || { name: "", color: "#888" };
 
@@ -61,10 +66,10 @@ function renderChips() {
 
 function renderProducts() {
   const list = $("#product-list");
-  const term = searchTerm.trim().toLowerCase();
+  const term = norm(searchTerm.trim());
   const items = PRODUCTS.filter((p) => {
     const okCat = activeCategory === "all" || p.category === activeCategory;
-    const okTerm = !term || p.name.toLowerCase().includes(term);
+    const okTerm = !term || matches(p, term);
     return okCat && okTerm;
   });
 
@@ -118,20 +123,39 @@ function renderProducts() {
 }
 
 /* ===================== Trang Đơn hàng ===================== */
-function renderOrderSelect(term = "") {
-  const t = term.trim().toLowerCase();
-  const sel = $("#order-product");
-  const html = CATEGORIES.map((c) => {
-    const opts = PRODUCTS.filter(
-      (p) =>
-        p.category === c.id &&
-        (!t || p.name.toLowerCase().includes(t) || (p.code || "").includes(t))
-    )
-      .map((p) => `<option value="${p.id}">${p.name} — ${fmt(p.price)}</option>`)
-      .join("");
-    return opts ? `<optgroup label="${c.name}">${opts}</optgroup>` : "";
-  }).join("");
-  sel.innerHTML = html || `<option value="" disabled>Không tìm thấy sản phẩm</option>`;
+function renderOrderResults() {
+  const box = $("#order-results");
+  const t = norm($("#order-search").value.trim());
+  if (!t) {
+    box.hidden = true;
+    box.innerHTML = "";
+    return;
+  }
+  const items = PRODUCTS.filter((p) => matches(p, t)).slice(0, 8);
+  box.hidden = false;
+  if (!items.length) {
+    box.innerHTML = `<p class="result-empty">Không tìm thấy sản phẩm</p>`;
+    return;
+  }
+  box.innerHTML = items
+    .map((p) => {
+      const inCart = order.get(p.id) || 0;
+      const price = showNpp ? p.priceNpp ?? p.price : p.price;
+      return `
+      <button class="result-row" type="button" data-pick="${p.id}">
+        <img class="result-img" src="${imgSrc(p)}" alt="" loading="lazy" />
+        <span class="result-info">
+          <span class="result-name">${p.name}</span>
+          <span class="result-price">${fmt(price)}</span>
+        </span>
+        ${inCart ? `<span class="result-count">×${inCart}</span>` : ""}
+        <span class="result-add" aria-hidden="true">+</span>
+      </button>`;
+    })
+    .join("");
+  $$("[data-pick]", box).forEach((btn) =>
+    btn.addEventListener("click", () => addToOrder(Number(btn.dataset.pick)))
+  );
 }
 
 function addToOrder(id, qty = 1) {
@@ -213,6 +237,8 @@ function renderOrder() {
   const badge = $("#cart-badge");
   badge.textContent = totalItems;
   badge.hidden = totalItems === 0;
+
+  renderOrderResults(); // cập nhật số "×N" trong kết quả tìm kiếm
 }
 
 /* ===================== Đơn mẫu (template) ===================== */
@@ -292,13 +318,7 @@ $("#search").addEventListener("input", (e) => {
   renderProducts();
 });
 
-$("#order-search").addEventListener("input", (e) => renderOrderSelect(e.target.value));
-
-$("#add-to-order").addEventListener("click", () => {
-  const val = $("#order-product").value;
-  if (val === "") return;
-  addToOrder(Number(val));
-});
+$("#order-search").addEventListener("input", renderOrderResults);
 
 $("#clear-order").addEventListener("click", () => {
   if (confirm("Xóa toàn bộ đơn hàng?")) {
@@ -342,7 +362,7 @@ document.addEventListener("click", (e) => {
 
 /* ===================== Xuất ảnh đơn (bill) ===================== */
 const qrImg = new Image();
-qrImg.src = "assets/qr-acb.jpg?v=12";
+qrImg.src = "assets/qr-acb.jpg?v=13";
 
 function rr(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -486,6 +506,5 @@ $$(".tab").forEach((t) => t.addEventListener("click", () => showView(t.dataset.v
 renderChips();
 renderProducts();
 renderTemplates();
-renderOrderSelect();
 renderOrder();
 renderLinks();
