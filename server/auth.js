@@ -5,9 +5,13 @@ const { get, run } = require("./db");
 const SESSION_DAYS = 30;
 const SCRYPT = { N: 16384, r: 8, p: 1 };
 
+// Chuẩn hoá Unicode (NFC): cùng một chữ có dấu có thể đến dưới hai dạng mã khác nhau
+// tuỳ bàn phím/thiết bị; không chuẩn hoá thì mật khẩu đúng vẫn bị báo sai.
+const normPw = (s) => String(s).normalize("NFC");
+
 function hashPassword(password) {
   const salt = crypto.randomBytes(16);
-  const key = crypto.scryptSync(password, salt, 64, SCRYPT);
+  const key = crypto.scryptSync(normPw(password), salt, 64, SCRYPT);
   return `scrypt$${salt.toString("base64")}$${key.toString("base64")}`;
 }
 
@@ -15,7 +19,7 @@ function verifyPassword(password, stored) {
   const [alg, salt, key] = String(stored).split("$");
   if (alg !== "scrypt" || !salt || !key) return false;
   const expected = Buffer.from(key, "base64");
-  const actual = crypto.scryptSync(password, Buffer.from(salt, "base64"), expected.length, SCRYPT);
+  const actual = crypto.scryptSync(normPw(password), Buffer.from(salt, "base64"), expected.length, SCRYPT);
   return crypto.timingSafeEqual(expected, actual);
 }
 
