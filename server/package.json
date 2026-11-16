@@ -1,0 +1,16 @@
+{
+  "name": "huy-abo-server",
+  "private": true,
+  "description": "Backend cho huy-abo: đăng nhập, tài khoản, thông tin nhận tiền",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "create-admin": "node --disable-warning=ExperimentalWarning create-admin.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
