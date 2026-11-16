@@ -6,3 +6,5 @@ Caddyfile
 .env.example
 .dockerignore
 DEPLOY.md
+CLAUDE.md
+scripts/

@@ -55,6 +55,14 @@ Trong tab Tài khoản, nhập thông tin nhận tiền, tạo một đơn nhỏ
 
 ## Cập nhật khi có bản mới
 
+Từ máy tính có SSH vào VPS (trong thư mục repo, sau khi đã push lên `main`):
+
+```bash
+scripts/deploy.sh <ssh-host>      # ví dụ: scripts/deploy.sh root@1.2.3.4
+```
+
+Hoặc làm tay trên VPS:
+
 ```bash
 cd huy-abo
 git pull
