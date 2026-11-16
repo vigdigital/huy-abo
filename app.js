@@ -44,6 +44,26 @@ let searchTerm = "";
 let showNpp = localStorage.getItem("showNpp") === "1"; // hiện giá nhà phân phối
 const order = new Map(); // productId -> quantity
 const gifts = new Set(); // productId là hàng tặng (giá 0)
+let currentUser = null; // account.js gán khi đăng nhập (chỉ có trên VPS)
+
+// Thoát ký tự HTML cho dữ liệu người dùng nhập
+const esc = (s) =>
+  String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
+// Người nhận tiền khi chưa đăng nhập: dùng ảnh QR gốc do ACB cấp
+const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=15" };
+
+// Người nhận tiền hiện hành. null = đã đăng nhập nhưng chưa nhập thông tin ngân hàng
+// (không rơi về tài khoản mặc định, tránh khách chuyển nhầm tiền).
+function payee() {
+  if (!currentUser) return DEFAULT_PAYEE;
+  if (!currentUser.bank_bin || !currentUser.bank_account) return null;
+  return {
+    bin: currentUser.bank_bin,
+    account: currentUser.bank_account,
+    holder: currentUser.bank_holder || currentUser.name || "",
+  };
+}
 
 /* ===================== Trang Sản phẩm ===================== */
 function renderChips() {
@@ -240,6 +260,61 @@ function renderOrder() {
   badge.hidden = totalItems === 0;
 
   renderOrderResults(); // cập nhật số "×N" trong kết quả tìm kiếm
+  renderPayment(totalMoney);
+}
+
+/* ===================== Thanh toán chuyển khoản ===================== */
+// Vẽ mã QR (thư viện qrcode-generator) vào canvas, ô vuông nguyên pixel cho sắc nét
+function drawQr(ctx, payload, x, y, size) {
+  const q = qrcode(0, "M");
+  q.addData(payload);
+  q.make();
+  const n = q.getModuleCount();
+  const cell = Math.floor(size / (n + 4)); // chừa lề trắng 2 ô mỗi bên
+  const off = Math.floor((size - cell * n) / 2);
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(x, y, size, size);
+  ctx.fillStyle = "#000";
+  for (let r = 0; r < n; r++)
+    for (let c = 0; c < n; c++) if (q.isDark(r, c)) ctx.fillRect(x + off + c * cell, y + off + r * cell, cell, cell);
+}
+
+function qrCanvas(payload, cssSize) {
+  const c = document.createElement("canvas");
+  c.width = c.height = cssSize * 2;
+  c.className = "payment-qr";
+  drawQr(c.getContext("2d"), payload, 0, 0, cssSize * 2);
+  return c;
+}
+
+const payPayload = (p, amount) => vietQrPayload({ bin: p.bin, account: p.account, amount });
+
+function renderPayment(total) {
+  const p = payee();
+  const box = $("#pay-qr");
+  const info = $("#pay-info");
+  const note = $("#pay-note");
+  if (!p) {
+    box.innerHTML = "";
+    info.innerHTML = `<p class="pay-missing">Bạn chưa nhập thông tin nhận tiền.</p>
+      <button type="button" class="link-btn" data-goto="account">Nhập ngay</button>`;
+    note.textContent = "";
+    return;
+  }
+  if (p.img) box.innerHTML = `<img class="payment-qr" src="${p.img}" alt="Mã QR chuyển khoản" />`;
+  else box.replaceChildren(qrCanvas(payPayload(p, total), 200));
+  info.innerHTML = `
+    <div class="pay-row"><span>Ngân hàng</span><b>${esc(bankName(p.bin) || p.bin)}</b></div>
+    <div class="pay-row"><span>Chủ tài khoản</span><b>${esc(p.holder)}</b></div>
+    <div class="pay-row">
+      <span>Số tài khoản</span>
+      <b class="bank-acc">${esc(p.account)}</b>
+      <button class="copy-btn" type="button" data-copy="${esc(p.account)}">Sao chép</button>
+    </div>`;
+  note.textContent =
+    !p.img && total
+      ? `Mã QR đã điền sẵn số tiền ${fmt(total)}. Vui lòng ghi nội dung là tên của bạn.`
+      : "Quét mã QR hoặc chuyển khoản theo thông tin trên. Vui lòng ghi nội dung là tên của bạn.";
 }
 
 /* ===================== Đơn mẫu (template) ===================== */
@@ -309,6 +384,7 @@ function showView(view) {
   $("#view-products").hidden = view !== "products";
   $("#view-order").hidden = view !== "order";
   $("#view-links").hidden = view !== "links";
+  $("#view-account").hidden = view !== "account";
   $$(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
   window.scrollTo({ top: 0 });
 }
@@ -338,6 +414,12 @@ nppToggle.addEventListener("change", () => {
   renderOrder();
 });
 
+// Nút chuyển tab (vd. "Nhập ngay" thông tin nhận tiền)
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-goto]");
+  if (btn) showView(btn.dataset.goto);
+});
+
 // Sao chép số tài khoản
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".copy-btn");
@@ -363,7 +445,7 @@ document.addEventListener("click", (e) => {
 
 /* ===================== Xuất ảnh đơn (bill) ===================== */
 const qrImg = new Image();
-qrImg.src = "assets/qr-acb.jpg?v=14";
+qrImg.src = DEFAULT_PAYEE.img;
 
 function rr(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -416,7 +498,8 @@ function renderBill(ctx, measure) {
     T("A", PAD + 19, 56, F(26, 800), "#0057b8", "center");
   }
   T("Amway · Đơn hàng", PAD + 52, 52, F(27, 800), "#ffffff");
-  T("Tra cứu giá & tính tiền", PAD + 52, 74, F(15, 400), "rgba(255,255,255,.85)");
+  const seller = currentUser ? `Người bán: ${currentUser.name || currentUser.phone} · ${currentUser.phone}` : "Tra cứu giá & tính tiền";
+  T(seller, PAD + 52, 74, F(15, 400), "rgba(255,255,255,.85)");
   y = hH + 34;
 
   T("Ngày " + nowStr(), PAD, y, F(18, 400), "#6b7684"); y += 22;
@@ -451,14 +534,21 @@ function renderBill(ctx, measure) {
   y += 8; HR(y); y += 36;
 
   T("Thanh toán chuyển khoản", W / 2, y, F(21, 800), "#003d82", "center"); y += 30;
-  const qr = 250;
-  if (!measure) {
-    if (qrImg.complete && qrImg.naturalWidth > 0) ctx.drawImage(qrImg, (W - qr) / 2, y, qr, qr);
-    else { ctx.strokeStyle = "#e6eaf0"; ctx.strokeRect((W - qr) / 2, y, qr, qr); }
+  const pay = payee();
+  if (!pay) {
+    T("Chưa có thông tin nhận tiền", W / 2, y, F(19, 400), "#6b7684", "center"); y += 34;
+  } else {
+    const qr = 250;
+    if (!measure) {
+      const qx = (W - qr) / 2;
+      if (!pay.img) drawQr(ctx, payPayload(pay, totalMoney), qx, y, qr);
+      else if (qrImg.complete && qrImg.naturalWidth > 0) ctx.drawImage(qrImg, qx, y, qr, qr);
+      else { ctx.strokeStyle = "#e6eaf0"; ctx.strokeRect(qx, y, qr, qr); }
+    }
+    y += qr + 26;
+    T(`${bankName(pay.bin) || pay.bin} · ${pay.holder}`, W / 2, y, F(20, 700), "#1b2430", "center"); y += 26;
+    T("STK: " + pay.account, W / 2, y, F(20, 600), "#1b2430", "center"); y += 34;
   }
-  y += qr + 26;
-  T("ACB · Võ Minh Huy", W / 2, y, F(20, 700), "#1b2430", "center"); y += 26;
-  T("STK: 140161319", W / 2, y, F(20, 600), "#1b2430", "center"); y += 34;
   T("Cảm ơn quý khách!", W / 2, y, F(18, 400), "#6b7684", "center"); y += 24;
 
   y += PAD;

@@ -1,0 +1,8 @@
+server/
+data/
+Dockerfile
+docker-compose.yml
+Caddyfile
+.env.example
+.dockerignore
+DEPLOY.md

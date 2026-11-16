@@ -1,0 +1,32 @@
+# Cấu hình trong file .env (chép từ .env.example)
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - appdata:/data # cơ sở dữ liệu + bản sao lưu
+    ports:
+      - "127.0.0.1:${APP_PORT:-3000}:3000" # chỉ mở trong máy, đi ra ngoài qua Caddy/Nginx
+
+  # Caddy: tự cấp và gia hạn HTTPS. Bật bằng COMPOSE_PROFILES=caddy trong .env
+  # (bỏ đi nếu VPS đã có Nginx/Apache chiếm cổng 80/443)
+  caddy:
+    image: caddy:2
+    profiles: ["caddy"]
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:-}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  appdata:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,273 @@
+/* ============================================================
+   TÀI KHOẢN — chỉ hoạt động khi web chạy trên VPS (có /api).
+   Trên Vercel không có backend: giữ nguyên hành vi cũ.
+   ============================================================ */
+
+let backend = false;
+const nppLabel = $(".npp-toggle");
+const accView = $("#view-account");
+
+/* ----- Gọi API ----- */
+async function api(method, path, body) {
+  const opts = { method, credentials: "same-origin", headers: {} };
+  if (method !== "GET") {
+    opts.headers["content-type"] = "application/json";
+    opts.body = JSON.stringify(body || {});
+  }
+  let r;
+  try {
+    r = await fetch(path, opts);
+  } catch {
+    throw new Error("Không kết nối được máy chủ");
+  }
+  const data = await r.json().catch(() => null);
+  if (r.status === 401 && path !== "/api/login" && currentUser) setUser(null); // phiên hết hạn
+  if (!r.ok) throw new Error((data && data.error) || "Có lỗi xảy ra");
+  return data;
+}
+
+/* ----- Giá NPP chỉ dành cho người đã đăng nhập ----- */
+// Tạm ẩn công tắc cho tới khi biết web có backend hay không
+nppLabel.hidden = true;
+if (showNpp) {
+  showNpp = false;
+  renderProducts();
+  renderOrder();
+}
+
+function setNppAllowed(allowed) {
+  nppLabel.hidden = !allowed;
+  const want = allowed && localStorage.getItem("showNpp") === "1";
+  if (want !== showNpp) {
+    showNpp = want;
+    nppToggle.checked = want;
+    renderProducts();
+    renderOrder();
+  }
+}
+
+function setUser(user) {
+  currentUser = user;
+  setNppAllowed(!!user);
+  renderOrder(); // cập nhật khối thanh toán theo người nhận tiền mới
+  renderAccount();
+}
+
+/* ----- Giao diện ----- */
+const field = (label, attrs) => `<label class="acc-field"><span>${label}</span><input ${attrs} /></label>`;
+
+function flash(form, text, ok = false) {
+  const m = $("[data-msg]", form);
+  m.textContent = text;
+  m.classList.toggle("ok", ok);
+}
+
+// Gửi form: khoá nút trong lúc chờ, hiện lỗi nếu có
+function onSubmit(form, handler) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = $("button[type=submit]", form);
+    btn.disabled = true;
+    flash(form, "");
+    try {
+      await handler(Object.fromEntries(new FormData(form)));
+    } catch (err) {
+      flash(form, err.message);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
+function renderAccount() {
+  if (!backend) return;
+  if (!currentUser) return renderLogin();
+
+  const u = currentUser;
+  const isAdmin = u.role === "admin";
+  const bankOptions =
+    `<option value="">— Chọn ngân hàng —</option>` +
+    BANKS.map((b) => `<option value="${b.bin}" ${b.bin === u.bank_bin ? "selected" : ""}>${esc(b.name)}</option>`).join("");
+
+  accView.innerHTML = `
+    <div class="acc-card acc-head">
+      <div>
+        <div class="acc-name">${esc(u.name || u.phone)}</div>
+        <div class="acc-sub">${esc(u.phone)}${isAdmin ? " · Quản trị viên" : ""}</div>
+      </div>
+      <button id="logout-btn" class="btn-sm" type="button">Đăng xuất</button>
+    </div>
+
+    <div class="acc-card">
+      <h2 class="acc-title">Thông tin nhận tiền</h2>
+      <p class="acc-hint">Hiện ở trang Đơn hàng và trong ảnh bill. Mã QR tự tạo từ thông tin này, có điền sẵn số tiền của đơn.</p>
+      <form id="profile-form" class="acc-form">
+        ${field("Tên hiển thị", `name="name" value="${esc(u.name)}" maxlength="60" placeholder="VD: Võ Minh Huy"`)}
+        <label class="acc-field"><span>Ngân hàng</span><select name="bank_bin">${bankOptions}</select></label>
+        ${field("Số tài khoản", `name="bank_account" value="${esc(u.bank_account)}" inputmode="numeric" maxlength="19" autocomplete="off"`)}
+        ${field("Tên chủ tài khoản", `name="bank_holder" value="${esc(u.bank_holder)}" maxlength="50" placeholder="VD: VO MINH HUY"`)}
+        <p class="acc-msg" data-msg></p>
+        <button class="btn-block" type="submit">Lưu thông tin</button>
+      </form>
+    </div>
+
+    <div class="acc-card">
+      <h2 class="acc-title">Đổi mật khẩu</h2>
+      <form id="password-form" class="acc-form">
+        ${field("Mật khẩu hiện tại", `name="current" type="password" autocomplete="current-password" required`)}
+        ${field("Mật khẩu mới", `name="next" type="password" autocomplete="new-password" minlength="6" required`)}
+        ${field("Nhập lại mật khẩu mới", `name="next2" type="password" autocomplete="new-password" minlength="6" required`)}
+        <p class="acc-msg" data-msg></p>
+        <button class="btn-block" type="submit">Đổi mật khẩu</button>
+      </form>
+    </div>
+
+    ${
+      isAdmin
+        ? `<div class="acc-card">
+      <h2 class="acc-title">Quản lý tài khoản</h2>
+      <form id="add-user-form" class="acc-form">
+        ${field("Số điện thoại", `name="phone" type="tel" inputmode="tel" required`)}
+        ${field("Tên", `name="name" maxlength="60"`)}
+        ${field("Mật khẩu ban đầu", `name="password" type="text" minlength="6" autocomplete="off" required`)}
+        <p class="acc-msg" data-msg></p>
+        <button class="btn-block" type="submit">Thêm tài khoản</button>
+      </form>
+      <div id="user-list" class="user-list"><p class="acc-hint">Đang tải...</p></div>
+    </div>`
+        : ""
+    }`;
+
+  $("#logout-btn").addEventListener("click", async () => {
+    await api("POST", "/api/logout").catch(() => {});
+    setUser(null);
+  });
+
+  onSubmit($("#profile-form"), async (v) => {
+    const { user } = await api("PUT", "/api/me/profile", v);
+    setUser(user);
+    flash($("#profile-form"), "Đã lưu ✓", true);
+  });
+
+  onSubmit($("#password-form"), async (v) => {
+    if (v.next !== v.next2) throw new Error("Hai lần nhập mật khẩu mới không khớp");
+    await api("PUT", "/api/me/password", { current: v.current, next: v.next });
+    $("#password-form").reset();
+    flash($("#password-form"), "Đã đổi mật khẩu. Các máy khác đã bị đăng xuất.", true);
+  });
+
+  if (isAdmin) {
+    onSubmit($("#add-user-form"), async (v) => {
+      await api("POST", "/api/admin/users", v);
+      $("#add-user-form").reset();
+      flash($("#add-user-form"), `Đã thêm tài khoản ${v.phone}`, true);
+      loadUsers();
+    });
+    loadUsers();
+  }
+}
+
+function renderLogin() {
+  accView.innerHTML = `
+    <div class="acc-card">
+      <h2 class="acc-title">Đăng nhập</h2>
+      <p class="acc-hint">Đăng nhập để xem giá NPP, PV/BV và in bill với tài khoản nhận tiền của bạn.</p>
+      <form id="login-form" class="acc-form">
+        ${field("Số điện thoại", `name="phone" type="tel" inputmode="tel" autocomplete="username" required`)}
+        ${field("Mật khẩu", `name="password" type="password" autocomplete="current-password" required`)}
+        <p class="acc-msg" data-msg></p>
+        <button class="btn-block" type="submit">Đăng nhập</button>
+      </form>
+      <p class="acc-hint">Chưa có tài khoản? Liên hệ quản trị viên để được cấp.</p>
+    </div>`;
+  onSubmit($("#login-form"), async (v) => {
+    const { user } = await api("POST", "/api/login", v);
+    setUser(user);
+  });
+}
+
+/* ----- Quản trị: danh sách tài khoản ----- */
+async function loadUsers() {
+  const box = $("#user-list");
+  if (!box) return;
+  let users;
+  try {
+    ({ users } = await api("GET", "/api/admin/users"));
+  } catch (err) {
+    box.innerHTML = `<p class="acc-msg">${esc(err.message)}</p>`;
+    return;
+  }
+  box.innerHTML = users
+    .map((u) => {
+      const self = u.id === currentUser.id;
+      const tags =
+        (u.role === "admin" ? `<span class="tag tag-admin">Admin</span>` : "") +
+        (u.disabled ? `<span class="tag tag-lock">Đã khoá</span>` : "");
+      const bank = u.bank_account ? `${esc(bankName(u.bank_bin) || u.bank_bin)} · ${esc(u.bank_account)}` : "Chưa có TK nhận tiền";
+      const actions = self
+        ? `<span class="acc-sub">(bạn)</span>`
+        : `<button class="btn-sm" data-act="reset" data-id="${u.id}">Đặt lại MK</button>
+           <button class="btn-sm" data-act="${u.disabled ? "unlock" : "lock"}" data-id="${u.id}">${u.disabled ? "Mở khoá" : "Khoá"}</button>
+           <button class="btn-sm danger" data-act="delete" data-id="${u.id}">Xoá</button>`;
+      return `
+      <div class="user-row">
+        <div class="user-main">
+          <div><b>${esc(u.name || "(chưa đặt tên)")}</b> ${tags}</div>
+          <div class="acc-sub">${esc(u.phone)} · ${bank}</div>
+        </div>
+        <div class="user-actions">${actions}</div>
+      </div>`;
+    })
+    .join("");
+}
+
+accView.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const row = btn.closest(".user-row");
+  const who = row ? $(".acc-sub", row).textContent.split(" · ")[0] : "";
+  try {
+    if (btn.dataset.act === "reset") {
+      const pw = prompt(`Mật khẩu mới cho ${who} (từ 6 ký tự):`);
+      if (!pw) return;
+      await api("PATCH", `/api/admin/users/${id}`, { password: pw });
+      alert(`Đã đặt lại mật khẩu cho ${who}.`);
+    } else if (btn.dataset.act === "lock") {
+      if (!confirm(`Khoá tài khoản ${who}? Người này sẽ bị đăng xuất ngay.`)) return;
+      await api("PATCH", `/api/admin/users/${id}`, { disabled: true });
+    } else if (btn.dataset.act === "unlock") {
+      await api("PATCH", `/api/admin/users/${id}`, { disabled: false });
+    } else if (btn.dataset.act === "delete") {
+      if (!confirm(`Xoá hẳn tài khoản ${who}? Không khôi phục được.`)) return;
+      await api("DELETE", `/api/admin/users/${id}`);
+    }
+    loadUsers();
+  } catch (err) {
+    alert(err.message);
+  }
+});
+
+/* ----- Khởi động: dò backend ----- */
+(async function initAccount() {
+  try {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 4000);
+    const r = await fetch("/api/health", { signal: ctl.signal, cache: "no-store" });
+    clearTimeout(timer);
+    backend = r.ok && (await r.json()).ok === true;
+  } catch {
+    backend = false;
+  }
+  if (!backend) {
+    setNppAllowed(true); // Vercel: công tắc NPP như cũ
+    return;
+  }
+  $("#tab-account").hidden = false;
+  try {
+    const { user } = await api("GET", "/api/me");
+    setUser(user);
+  } catch {
+    setUser(null);
+  }
+})();

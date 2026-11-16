@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0057B8" />
   <title>Tra cứu giá Amway</title>
-  <link rel="stylesheet" href="styles.css?v=14" />
+  <link rel="stylesheet" href="styles.css?v=15" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230057B8%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>A</text></svg>" />
 </head>
 <body>
@@ -68,19 +68,12 @@
         </div>
       </div>
 
+      <!-- Nội dung do app.js điền theo người nhận tiền hiện hành -->
       <div id="payment" class="payment">
         <h3 class="payment-title">Thanh toán chuyển khoản</h3>
-        <img class="payment-qr" src="assets/qr-acb.jpg?v=14" alt="Mã QR chuyển khoản ACB - Võ Minh Huy" />
-        <div class="payment-info">
-          <div class="pay-row"><span>Ngân hàng</span><b>ACB</b></div>
-          <div class="pay-row"><span>Chủ tài khoản</span><b>Võ Minh Huy</b></div>
-          <div class="pay-row">
-            <span>Số tài khoản</span>
-            <b id="bank-acc">140161319</b>
-            <button class="copy-btn" type="button" data-copy="140161319">Sao chép</button>
-          </div>
-        </div>
-        <p class="payment-note">Quét mã QR hoặc chuyển khoản theo thông tin trên. Vui lòng ghi nội dung là tên của bạn.</p>
+        <div id="pay-qr"></div>
+        <div id="pay-info" class="payment-info"></div>
+        <p id="pay-note" class="payment-note"></p>
       </div>
 
       <div id="order-actions" class="order-actions" hidden>
@@ -97,6 +90,9 @@
       <div id="links-list" class="links-list"></div>
       <p id="empty-links" class="empty" hidden>Chưa có liên kết nào.</p>
     </section>
+
+    <!-- ===== Trang Tài khoản (chỉ khi chạy trên VPS, account.js điền nội dung) ===== -->
+    <section id="view-account" class="view account" hidden></section>
   </main>
 
   <!-- ===== Thanh điều hướng dưới (mobile) ===== -->
@@ -114,10 +110,17 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 007.07 0l2-2a5 5 0 00-7.07-7.07l-1.1 1.1M14 11a5 5 0 00-7.07 0l-2 2a5 5 0 007.07 7.07l1.1-1.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Liên kết</span>
     </button>
+    <button class="tab" id="tab-account" data-view="account" type="button" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21a8 8 0 0116 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Tài khoản</span>
+    </button>
   </nav>
 
-  <script src="data.js?v=14"></script>
-  <script src="links.js?v=14"></script>
-  <script src="app.js?v=14"></script>
+  <script src="data.js?v=15"></script>
+  <script src="links.js?v=15"></script>
+  <script src="assets/qrcode.js?v=15"></script>
+  <script src="assets/vietqr.js?v=15"></script>
+  <script src="app.js?v=15"></script>
+  <script src="account.js?v=15"></script>
 </body>
 </html>
