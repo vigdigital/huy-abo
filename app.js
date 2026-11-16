@@ -41,7 +41,9 @@ const imgSrc = (p) => (p.img && p.img.trim() ? p.img : placeholder(p));
 /* ===================== Trạng thái ===================== */
 let activeCategory = "all";
 let searchTerm = "";
-let showNpp = localStorage.getItem("showNpp") === "1"; // hiện giá nhà phân phối
+// Hiện giá nhà phân phối (NPP, PV/BV). Chỉ bật được khi đã đăng nhập trên VPS:
+// account.js bật theo lựa chọn đã lưu sau khi đăng nhập, công tắc nằm trong tab Tài khoản.
+let showNpp = false;
 const order = new Map(); // productId -> quantity
 const gifts = new Set(); // productId là hàng tặng (giá 0)
 let currentUser = null; // account.js gán khi đăng nhập (chỉ có trên VPS)
@@ -51,7 +53,7 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 // Người nhận tiền khi chưa đăng nhập: dùng ảnh QR gốc do ACB cấp
-const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=15" };
+const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=16" };
 
 // Người nhận tiền hiện hành. null = đã đăng nhập nhưng chưa nhập thông tin ngân hàng
 // (không rơi về tài khoản mặc định, tránh khách chuyển nhầm tiền).
@@ -122,24 +124,38 @@ function renderProducts() {
               <span class="card-price">${fmt(p.price)}</span>
               ${nppLine}
             </div>
-            <button class="btn-add" data-add="${p.id}" aria-label="Thêm vào đơn">+</button>
+            ${addBtn(p.id)}
           </div>
         </div>
       </article>`;
     })
     .join("");
 
+  // Bấm + để thêm vào đơn (nút thành ✓), bấm ✓ để bỏ khỏi đơn
   $$("[data-add]", list).forEach((btn) =>
     btn.addEventListener("click", () => {
-      addToOrder(Number(btn.dataset.add));
-      btn.classList.add("added");
-      btn.textContent = "✓";
-      setTimeout(() => {
-        btn.classList.remove("added");
-        btn.textContent = "+";
-      }, 700);
+      const id = Number(btn.dataset.add);
+      if (order.has(id)) setQty(id, 0);
+      else addToOrder(id);
     })
   );
+}
+
+function addBtn(id) {
+  const inCart = order.has(id);
+  return `<button class="btn-add ${inCart ? "added" : ""}" data-add="${id}" type="button" aria-pressed="${inCart}"
+    aria-label="${inCart ? "Bỏ khỏi đơn" : "Thêm vào đơn"}">${inCart ? "✓" : "+"}</button>`;
+}
+
+// Cập nhật trạng thái +/✓ trên trang Sản phẩm khi đơn thay đổi (kể cả sửa ở trang Đơn hàng)
+function syncAddButtons() {
+  $$("#product-list [data-add]").forEach((btn) => {
+    const inCart = order.has(Number(btn.dataset.add));
+    btn.classList.toggle("added", inCart);
+    btn.textContent = inCart ? "✓" : "+";
+    btn.setAttribute("aria-pressed", inCart);
+    btn.setAttribute("aria-label", inCart ? "Bỏ khỏi đơn" : "Thêm vào đơn");
+  });
 }
 
 /* ===================== Trang Đơn hàng ===================== */
@@ -260,6 +276,7 @@ function renderOrder() {
   badge.hidden = totalItems === 0;
 
   renderOrderResults(); // cập nhật số "×N" trong kết quả tìm kiếm
+  syncAddButtons();
   renderPayment(totalMoney);
 }
 
@@ -403,15 +420,6 @@ $("#clear-order").addEventListener("click", () => {
     gifts.clear();
     renderOrder();
   }
-});
-
-const nppToggle = $("#toggle-npp");
-nppToggle.checked = showNpp;
-nppToggle.addEventListener("change", () => {
-  showNpp = nppToggle.checked;
-  localStorage.setItem("showNpp", showNpp ? "1" : "0");
-  renderProducts();
-  renderOrder();
 });
 
 // Nút chuyển tab (vd. "Nhập ngay" thông tin nhận tiền)

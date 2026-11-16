@@ -11,7 +11,7 @@ Công cụ tra cứu giá sản phẩm Amway và tính tiền đơn hàng, tối
 | Đăng nhập | không | có |
 | Cập nhật | tự deploy khi push lên `main` | `scripts/deploy.sh <ssh-host>` sau khi push |
 
-`account.js` gọi `/api/health` khi tải trang. Không có backend (Vercel) thì web chạy như bản tĩnh: công tắc Giá NPP mở cho mọi người, QR ACB mặc định. Mọi thay đổi giao diện phải chạy đúng ở **cả hai** chế độ.
+`account.js` gọi `/api/health` khi tải trang. Không có backend (Vercel) thì web chạy như bản tĩnh: không có giá NPP/PV/BV, QR ACB mặc định. Mọi thay đổi giao diện phải chạy đúng ở **cả hai** chế độ.
 
 ## Cấu trúc
 
@@ -32,6 +32,7 @@ Công cụ tra cứu giá sản phẩm Amway và tính tiền đơn hàng, tối
 - **Phát hành** = commit + push lên `main` (Vercel tự cập nhật), rồi chạy `scripts/deploy.sh` để cập nhật VPS. Hỏi chủ dự án host SSH nếu chưa biết; không đoán.
 - Không commit `.env`, file `.db`, mật khẩu, key. Không tự tạo hay đặt mật khẩu tài khoản: admin tự chạy `docker compose exec app npm --prefix server run create-admin --silent`.
 - Không đổi schema bảng `users`/`sessions` mà không có bước chuyển dữ liệu cũ; dữ liệu thật nằm trong volume `appdata` trên VPS. Trước khi đụng tới dữ liệu trên VPS, nhắc chủ dự án chép bản sao lưu ra ngoài (xem `DEPLOY.md`).
+- Giá NPP, PV/BV chỉ hiện khi **đã đăng nhập**. Công tắc nằm trong tab Tài khoản và cố ý **không có chữ** (khách đứng xem không biết mà bấm); không đưa lại lên header, không ghi chữ "NPP" ở chỗ khách thấy được (kể cả trang đăng nhập).
 - Người đã đăng nhập mà chưa nhập ngân hàng thì **không** được hiện tài khoản mặc định của chủ dự án (tránh khách chuyển nhầm tiền).
 - Sửa phần VietQR hay danh sách BIN: kiểm tra bằng cách giải mã lại QR, và nhắc chủ dự án quét thử bằng app ngân hàng.
 

@@ -4,7 +4,6 @@
    ============================================================ */
 
 let backend = false;
-const nppLabel = $(".npp-toggle");
 const accView = $("#view-account");
 
 /* ----- Gọi API ----- */
@@ -26,24 +25,20 @@ async function api(method, path, body) {
   return data;
 }
 
-/* ----- Giá NPP chỉ dành cho người đã đăng nhập ----- */
-// Tạm ẩn công tắc cho tới khi biết web có backend hay không
-nppLabel.hidden = true;
-if (showNpp) {
-  showNpp = false;
+/* ----- Giá NPP chỉ dành cho người đã đăng nhập -----
+   Công tắc nằm trong tab Tài khoản, không có chữ, để khách đứng xem không biết mà bấm.
+   Chưa đăng nhập (và trên Vercel, nơi không có đăng nhập) thì luôn tắt. */
+const nppSaved = () => localStorage.getItem("showNpp") === "1";
+
+function setShowNpp(on) {
+  if (on === showNpp) return;
+  showNpp = on;
   renderProducts();
   renderOrder();
 }
 
 function setNppAllowed(allowed) {
-  nppLabel.hidden = !allowed;
-  const want = allowed && localStorage.getItem("showNpp") === "1";
-  if (want !== showNpp) {
-    showNpp = want;
-    nppToggle.checked = want;
-    renderProducts();
-    renderOrder();
-  }
+  setShowNpp(allowed && nppSaved());
 }
 
 function setUser(user) {
@@ -95,7 +90,13 @@ function renderAccount() {
         <div class="acc-name">${esc(u.name || u.phone)}</div>
         <div class="acc-sub">${esc(u.phone)}${isAdmin ? " · Quản trị viên" : ""}</div>
       </div>
-      <button id="logout-btn" class="btn-sm" type="button">Đăng xuất</button>
+      <div class="acc-head-actions">
+        <label class="npp-toggle">
+          <input type="checkbox" id="toggle-npp" aria-label="Chế độ giá" ${showNpp ? "checked" : ""} />
+          <span class="npp-track"><span class="npp-thumb"></span></span>
+        </label>
+        <button id="logout-btn" class="btn-sm" type="button">Đăng xuất</button>
+      </div>
     </div>
 
     <div class="acc-card">
@@ -138,6 +139,11 @@ function renderAccount() {
         : ""
     }`;
 
+  $("#toggle-npp").addEventListener("change", (e) => {
+    localStorage.setItem("showNpp", e.target.checked ? "1" : "0");
+    setShowNpp(e.target.checked);
+  });
+
   $("#logout-btn").addEventListener("click", async () => {
     await api("POST", "/api/logout").catch(() => {});
     setUser(null);
@@ -171,7 +177,7 @@ function renderLogin() {
   accView.innerHTML = `
     <div class="acc-card">
       <h2 class="acc-title">Đăng nhập</h2>
-      <p class="acc-hint">Đăng nhập để xem giá NPP, PV/BV và in bill với tài khoản nhận tiền của bạn.</p>
+      <p class="acc-hint">Đăng nhập để in bill với tài khoản nhận tiền của bạn.</p>
       <form id="login-form" class="acc-form">
         ${field("Số điện thoại", `name="phone" type="tel" inputmode="tel" autocomplete="username" required`)}
         ${field("Mật khẩu", `name="password" type="password" autocomplete="current-password" required`)}
@@ -259,10 +265,7 @@ accView.addEventListener("click", async (e) => {
   } catch {
     backend = false;
   }
-  if (!backend) {
-    setNppAllowed(true); // Vercel: công tắc NPP như cũ
-    return;
-  }
+  if (!backend) return; // Vercel: không có đăng nhập nên không có giá NPP
   $("#tab-account").hidden = false;
   try {
     const { user } = await api("GET", "/api/me");

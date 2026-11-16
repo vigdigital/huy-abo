@@ -6,7 +6,7 @@ Trang web tĩnh, tối ưu cho mobile, dùng để **tra cứu giá sản phẩm
 
 ## Tính năng
 - **Sản phẩm**: danh sách sản phẩm thật chia theo danh mục (Nutrilite, Artistry, Cá nhân, Gia dụng), card có hình, tên, giá bán lẻ. Tìm kiếm không cần gõ dấu, lọc theo danh mục.
-- **Giá NPP**: công tắc trên header. Bật thì tab Sản phẩm hiện thêm giá NPP và PV/BV; tab Đơn hàng tính theo giá NPP và hiện tổng PV/BV.
+- **Giá NPP** (chỉ bản VPS, khi đã đăng nhập): công tắc không chữ ở đầu tab Tài khoản, cạnh nút Đăng xuất. Bật thì tab Sản phẩm hiện thêm giá NPP và PV/BV; tab Đơn hàng tính theo giá NPP và hiện tổng PV/BV.
 - **Đơn hàng**: gõ tìm rồi chạm để thêm sản phẩm, chỉnh số lượng, tự tính tổng. Có đơn mẫu (Combo F.Fit), hàng tặng, thông tin chuyển khoản ACB kèm QR, xuất ảnh bill.
 - **Liên kết**: các link hữu ích chia nhóm (Sản phẩm, Kinh doanh, Bài nghe).
 

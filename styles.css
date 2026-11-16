@@ -40,20 +40,20 @@ body {
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .brand-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* Toggle Giá NPP */
+/* Công tắc giá NPP (trong tab Tài khoản, cố ý không có chữ) */
 .npp-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
   cursor: pointer;
   flex: 0 0 auto;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
-.npp-text { font-size: 12.5px; font-weight: 600; color: #fff; opacity: .95; }
 .npp-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.npp-toggle input:focus-visible + .npp-track { outline: 2px solid var(--brand); outline-offset: 2px; }
 .npp-track {
   width: 38px; height: 22px;
-  background: rgba(255, 255, 255, .35);
+  background: #d5dbe3;
   border-radius: 999px;
   position: relative;
   transition: background .18s;
@@ -429,6 +429,7 @@ main { max-width: 640px; margin: 0 auto; }
   margin-bottom: 12px;
 }
 .acc-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.acc-head-actions { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
 .acc-name { font-size: 16px; font-weight: 800; }
 .acc-sub { font-size: 12.5px; color: var(--muted); }
 .acc-title { margin: 0 0 4px; font-size: 15px; font-weight: 800; color: var(--brand-dark); }
