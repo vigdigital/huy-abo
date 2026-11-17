@@ -30,6 +30,14 @@ db.exec(`
     user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     expires_at INTEGER NOT NULL
   );
+  -- Ảnh mã QR nhận tiền do người dùng tải lên (bảng riêng, không đụng bảng users).
+  -- Nằm trong app.db nên có trong bản sao lưu; xoá tài khoản thì ảnh tự xoá theo.
+  CREATE TABLE IF NOT EXISTS user_qr (
+    user_id    INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    mime       TEXT NOT NULL,
+    data       BLOB NOT NULL,
+    updated_at INTEGER NOT NULL
+  );
 `);
 
 const get = (sql, ...args) => db.prepare(sql).get(...args);

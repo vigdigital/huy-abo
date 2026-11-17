@@ -7,13 +7,13 @@ Trang web tĩnh, tối ưu cho mobile, dùng để **tra cứu giá sản phẩm
 ## Tính năng
 - **Sản phẩm**: danh sách sản phẩm thật chia theo danh mục (Nutrilite, Artistry, Cá nhân, Gia dụng), card có hình, tên, giá bán lẻ. Tìm kiếm không cần gõ dấu, lọc theo danh mục.
 - **Giá NPP** (chỉ bản VPS, khi đã đăng nhập): công tắc không chữ ở đầu tab Tài khoản, cạnh nút Đăng xuất. Bật thì tab Sản phẩm hiện thêm giá NPP và PV/BV; tab Đơn hàng tính theo giá NPP và hiện tổng PV/BV.
-- **Đơn hàng**: gõ tìm rồi chạm để thêm sản phẩm, chỉnh số lượng, tự tính tổng. Có đơn mẫu (Combo F.Fit), hàng tặng, thông tin chuyển khoản ACB kèm QR, xuất ảnh bill.
+- **Đơn hàng**: gõ tìm rồi chạm để thêm sản phẩm, chỉnh số lượng, tự tính tổng. Có đơn mẫu (Combo F.Fit), hàng tặng, thông tin chuyển khoản ACB kèm QR. Bill (ảnh) có QR và đủ thông tin chuyển khoản: nút **Lưu bill** tải ảnh về máy, **Gửi bill** mở bảng chia sẻ (Zalo, Messenger...).
 - **Liên kết**: các link hữu ích chia nhóm (Sản phẩm, Kinh doanh, Bài nghe).
 
 ## Bản VPS (có đăng nhập)
 Cùng một bộ code, khi chạy trên VPS bằng Docker thì có thêm:
 - **Đăng nhập** bằng SĐT + mật khẩu do admin cấp. Khách chưa đăng nhập chỉ xem giá bán lẻ.
-- **Tài khoản nhận tiền riêng** cho từng người: chọn ngân hàng, STK, tên chủ TK. QR VietQR tự tạo, điền sẵn số tiền của đơn, hiện ở trang Đơn hàng và trong bill.
+- **Tài khoản nhận tiền riêng** cho từng người: chọn ngân hàng, STK, tên chủ TK. QR VietQR tự tạo, điền sẵn số tiền của đơn, hiện ở trang Đơn hàng và trong bill. Hoặc **tải ảnh QR** lấy từ app ngân hàng lên (thu nhỏ ngay trên máy, lưu trong máy chủ): có ảnh thì dùng ảnh đó thay cho QR tự tạo.
 - **Quản trị**: thêm tài khoản, đặt lại mật khẩu, khoá, xoá.
 - Tự sao lưu dữ liệu mỗi ngày.
 

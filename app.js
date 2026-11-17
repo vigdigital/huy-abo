@@ -53,18 +53,39 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 // Người nhận tiền khi chưa đăng nhập: dùng ảnh QR gốc do ACB cấp
-const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=16" };
+const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=17" };
 
-// Người nhận tiền hiện hành. null = đã đăng nhập nhưng chưa nhập thông tin ngân hàng
+// Người nhận tiền hiện hành. null = đã đăng nhập nhưng chưa nhập ngân hàng và chưa tải ảnh QR
 // (không rơi về tài khoản mặc định, tránh khách chuyển nhầm tiền).
+// Có ảnh QR tải lên thì dùng ảnh đó; không thì tự tạo VietQR (có điền sẵn số tiền).
 function payee() {
   if (!currentUser) return DEFAULT_PAYEE;
-  if (!currentUser.bank_bin || !currentUser.bank_account) return null;
+  const u = currentUser;
+  const hasBank = !!(u.bank_bin && u.bank_account);
+  if (!hasBank && !u.qr_updated) return null;
   return {
-    bin: currentUser.bank_bin,
-    account: currentUser.bank_account,
-    holder: currentUser.bank_holder || currentUser.name || "",
+    bin: hasBank ? u.bank_bin : "",
+    account: hasBank ? u.bank_account : "",
+    holder: u.bank_holder || u.name || "",
+    img: u.qr_updated ? `/api/me/qr?v=${u.qr_updated}` : null,
   };
+}
+
+// Ảnh QR (mặc định hoặc do người dùng tải lên), giữ sẵn để vẽ vào bill
+const imgCache = new Map();
+function loadImg(src) {
+  if (!imgCache.has(src)) {
+    imgCache.set(
+      src,
+      new Promise((resolve) => {
+        const im = new Image();
+        im.onload = () => resolve(im);
+        im.onerror = () => resolve(null);
+        im.src = src;
+      })
+    );
+  }
+  return imgCache.get(src);
 }
 
 /* ===================== Trang Sản phẩm ===================== */
@@ -318,20 +339,32 @@ function renderPayment(total) {
     note.textContent = "";
     return;
   }
-  if (p.img) box.innerHTML = `<img class="payment-qr" src="${p.img}" alt="Mã QR chuyển khoản" />`;
-  else box.replaceChildren(qrCanvas(payPayload(p, total), 200));
-  info.innerHTML = `
-    <div class="pay-row"><span>Ngân hàng</span><b>${esc(bankName(p.bin) || p.bin)}</b></div>
-    <div class="pay-row"><span>Chủ tài khoản</span><b>${esc(p.holder)}</b></div>
-    <div class="pay-row">
-      <span>Số tài khoản</span>
-      <b class="bank-acc">${esc(p.account)}</b>
-      <button class="copy-btn" type="button" data-copy="${esc(p.account)}">Sao chép</button>
-    </div>`;
+  if (p.img) {
+    box.innerHTML = `<img class="payment-qr" src="${esc(p.img)}" alt="Mã QR chuyển khoản" />`;
+    loadImg(p.img); // tải sẵn cho bill
+  } else box.replaceChildren(qrCanvas(payPayload(p, total), 200));
+  info.innerHTML = payRows(p, total)
+    .map(([label, value, copy]) =>
+      copy
+        ? `<div class="pay-row"><span>${label}</span><b class="bank-acc">${esc(value)}</b>
+           <button class="copy-btn" type="button" data-copy="${esc(value)}">Sao chép</button></div>`
+        : `<div class="pay-row"><span>${label}</span><b>${esc(value)}</b></div>`
+    )
+    .join("");
   note.textContent =
     !p.img && total
       ? `Mã QR đã điền sẵn số tiền ${fmt(total)}. Vui lòng ghi nội dung là tên của bạn.`
       : "Quét mã QR hoặc chuyển khoản theo thông tin trên. Vui lòng ghi nội dung là tên của bạn.";
+}
+
+// Các dòng thông tin chuyển khoản: [nhãn, giá trị, có nút sao chép]. Dùng chung cho trang Đơn hàng và bill.
+function payRows(p, total) {
+  const rows = [];
+  if (p.bin) rows.push(["Ngân hàng", bankName(p.bin) || p.bin]);
+  if (p.holder) rows.push(["Chủ tài khoản", p.holder]);
+  if (p.account) rows.push(["Số tài khoản", p.account, true]);
+  if (total) rows.push(["Số tiền", fmt(total)]);
+  return rows;
 }
 
 /* ===================== Đơn mẫu (template) ===================== */
@@ -452,8 +485,7 @@ document.addEventListener("click", (e) => {
 });
 
 /* ===================== Xuất ảnh đơn (bill) ===================== */
-const qrImg = new Image();
-qrImg.src = DEFAULT_PAYEE.img;
+loadImg(DEFAULT_PAYEE.img);
 
 function rr(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -471,7 +503,8 @@ function nowStr() {
   return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-function renderBill(ctx, measure) {
+// qrImage: ảnh QR đã tải xong (khi người nhận tiền dùng ảnh), null nếu tự tạo VietQR
+function renderBill(ctx, measure, qrImage) {
   const W = 760, PAD = 40, contentW = W - PAD * 2;
   const ids = [...order.keys()];
   const F = (s, w = 400) => `${w} ${s}px -apple-system,"Segoe UI",Roboto,Arial,sans-serif`;
@@ -546,16 +579,28 @@ function renderBill(ctx, measure) {
   if (!pay) {
     T("Chưa có thông tin nhận tiền", W / 2, y, F(19, 400), "#6b7684", "center"); y += 34;
   } else {
-    const qr = 250;
-    if (!measure) {
-      const qx = (W - qr) / 2;
-      if (!pay.img) drawQr(ctx, payPayload(pay, totalMoney), qx, y, qr);
-      else if (qrImg.complete && qrImg.naturalWidth > 0) ctx.drawImage(qrImg, qx, y, qr, qr);
-      else { ctx.strokeStyle = "#e6eaf0"; ctx.strokeRect(qx, y, qr, qr); }
+    // Ảnh tải lên giữ đúng tỉ lệ (rộng tối đa 360, cao tối đa 480: ảnh chụp màn hình điện thoại
+    // thường rất dài); VietQR tự tạo là ô vuông 250
+    let qw = 250, qh = 250;
+    if (pay.img && qrImage) {
+      const k = Math.min(360 / qrImage.naturalWidth, 480 / qrImage.naturalHeight);
+      qw = Math.round(qrImage.naturalWidth * k);
+      qh = Math.round(qrImage.naturalHeight * k);
     }
-    y += qr + 26;
-    T(`${bankName(pay.bin) || pay.bin} · ${pay.holder}`, W / 2, y, F(20, 700), "#1b2430", "center"); y += 26;
-    T("STK: " + pay.account, W / 2, y, F(20, 600), "#1b2430", "center"); y += 34;
+    if (!measure) {
+      const qx = (W - qw) / 2;
+      if (!pay.img) drawQr(ctx, payPayload(pay, totalMoney), qx, y, qw);
+      else if (qrImage) ctx.drawImage(qrImage, qx, y, qw, qh);
+      else { ctx.strokeStyle = "#e6eaf0"; ctx.strokeRect(qx, y, qw, qh); }
+    }
+    y += qh + 30;
+    // Thông tin chuyển khoản: nhãn bên trái, giá trị bên phải
+    payRows(pay, totalMoney).forEach(([label, value]) => {
+      T(label, PAD, y, F(19, 400), "#6b7684");
+      T(value, W - PAD, y, F(20, 700), label === "Số tiền" ? "#003d82" : "#1b2430", "right");
+      y += 30;
+    });
+    T("Nội dung chuyển khoản: tên của bạn", W / 2, y + 4, F(17, 400), "#6b7684", "center"); y += 38;
   }
   T("Cảm ơn quý khách!", W / 2, y, F(18, 400), "#6b7684", "center"); y += 24;
 
@@ -563,22 +608,24 @@ function renderBill(ctx, measure) {
   return y;
 }
 
-function downloadBlob(blob) {
+function downloadBlob(blob, name = "don-hang-amway.png") {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "don-hang-amway.png";
+  a.download = name;
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 
-function exportBill() {
-  if (order.size === 0) { alert("Đơn hàng đang trống."); return; }
+// Vẽ bill thành ảnh PNG (chờ ảnh QR tải xong nếu người nhận tiền dùng ảnh)
+async function makeBillBlob() {
+  const pay = payee();
+  const qrImage = pay && pay.img ? await loadImg(pay.img) : null;
   const W = 760, scale = 2;
   const mctx = document.createElement("canvas").getContext("2d");
-  const H = Math.ceil(renderBill(mctx, true));
+  const H = Math.ceil(renderBill(mctx, true, qrImage));
   const canvas = document.createElement("canvas");
   canvas.width = W * scale;
   canvas.height = H * scale;
@@ -586,19 +633,34 @@ function exportBill() {
   ctx.scale(scale, scale);
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, W, H);
-  renderBill(ctx, false);
-  canvas.toBlob((blob) => {
-    if (!blob) { alert("Không tạo được ảnh."); return; }
-    const file = new File([blob], "don-hang-amway.png", { type: "image/png" });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: "Đơn hàng Amway" }).catch(() => downloadBlob(blob));
-    } else {
-      downloadBlob(blob);
-    }
-  }, "image/png");
+  renderBill(ctx, false, qrImage);
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
 }
 
-$("#export-bill").addEventListener("click", exportBill);
+const billName = () => {
+  const d = new Date(), p = (n) => String(n).padStart(2, "0");
+  return `bill-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.png`;
+};
+
+// mode "share": mở bảng chia sẻ (Zalo, Messenger...), máy không hỗ trợ thì tải về
+// mode "save": tải ảnh về máy
+async function exportBill(mode) {
+  if (order.size === 0) { alert("Đơn hàng đang trống."); return; }
+  const blob = await makeBillBlob();
+  if (!blob) { alert("Không tạo được ảnh."); return; }
+  const name = billName();
+  const file = new File([blob], name, { type: "image/png" });
+  if (mode === "share" && navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file], title: "Đơn hàng Amway" }).catch((e) => {
+      if (e && e.name !== "AbortError") downloadBlob(blob, name);
+    });
+  } else {
+    downloadBlob(blob, name);
+  }
+}
+
+$("#export-bill").addEventListener("click", () => exportBill("share"));
+$("#save-bill").addEventListener("click", () => exportBill("save"));
 
 $$(".tab").forEach((t) => t.addEventListener("click", () => showView(t.dataset.view)));
 

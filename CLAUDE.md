@@ -19,6 +19,7 @@ Công cụ tra cứu giá sản phẩm Amway và tính tiền đơn hàng, tối
 - `data.js`: `CATEGORIES`, `PRODUCTS`, `TEMPLATES` (đơn mẫu). `links.js`: `LINK_GROUPS`, `LINKS`.
 - `assets/vietqr.js`: tạo chuỗi VietQR + danh sách mã BIN ngân hàng. `assets/qrcode.js`: thư viện vẽ QR (MIT, không sửa).
 - `server/`: `server.js` (API), `db.js` (schema, sao lưu hằng ngày), `auth.js` (scrypt, cookie phiên), `create-admin.js`.
+- Ảnh QR người dùng tải lên nằm trong bảng `user_qr` (BLOB, mỗi người một ảnh), phục vụ qua `/api/me/qr?v=<qr_updated>`. Trình duyệt thu nhỏ ảnh trước khi gửi (`shrinkImage` trong `account.js`); máy chủ chỉ nhận PNG/JPEG tối đa 600KB và kiểm tra chữ ký file.
 - `Dockerfile`, `docker-compose.yml`, `Caddyfile`, `.env.example`, `DEPLOY.md`. `.vercelignore` giữ code server khỏi Vercel.
 
 ## Sửa dữ liệu

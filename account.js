@@ -110,6 +110,26 @@ function renderAccount() {
         <p class="acc-msg" data-msg></p>
         <button class="btn-block" type="submit">Lưu thông tin</button>
       </form>
+
+      <div class="acc-qr">
+        <div class="acc-qr-head">
+          <span class="acc-qr-label">Ảnh mã QR nhận tiền <small>(không bắt buộc)</small></span>
+        </div>
+        <p class="acc-hint">${
+          u.qr_updated
+            ? "Trang Đơn hàng và bill đang dùng ảnh này. Khách cần tự nhập số tiền khi quét."
+            : "Tải ảnh QR lấy từ app ngân hàng lên thì trang Đơn hàng và bill sẽ dùng ảnh đó (nên cắt ảnh sát quanh mã QR cho dễ quét). Không tải thì mã QR tự tạo từ số tài khoản, có điền sẵn số tiền."
+        }</p>
+        ${u.qr_updated ? `<img class="acc-qr-img" src="/api/me/qr?v=${u.qr_updated}" alt="Ảnh mã QR của bạn" />` : ""}
+        <div class="acc-qr-actions">
+          <label class="btn-sm btn-file">
+            ${u.qr_updated ? "Đổi ảnh" : "Chọn ảnh QR"}
+            <input type="file" id="qr-file" accept="image/png,image/jpeg,image/webp,image/heic,image/*" />
+          </label>
+          ${u.qr_updated ? `<button class="btn-sm danger" id="qr-del" type="button">Xoá ảnh</button>` : ""}
+        </div>
+        <p class="acc-msg" id="qr-msg"></p>
+      </div>
     </div>
 
     <div class="acc-card">
@@ -155,6 +175,37 @@ function renderAccount() {
     flash($("#profile-form"), "Đã lưu ✓", true);
   });
 
+  const qrMsg = (text, ok = false) => {
+    const m = $("#qr-msg");
+    if (!m) return;
+    m.textContent = text;
+    m.classList.toggle("ok", ok);
+  };
+  $("#qr-file").addEventListener("change", async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    qrMsg("Đang tải ảnh lên...", true);
+    try {
+      const image = await shrinkImage(file);
+      const { user } = await api("PUT", "/api/me/qr", { image });
+      setUser(user);
+      qrMsg("Đã lưu ảnh QR ✓", true);
+    } catch (err) {
+      qrMsg(err.message);
+    }
+  });
+  const qrDel = $("#qr-del");
+  if (qrDel)
+    qrDel.addEventListener("click", async () => {
+      if (!confirm("Xoá ảnh QR? Trang Đơn hàng sẽ quay về mã QR tự tạo từ số tài khoản.")) return;
+      try {
+        const { user } = await api("DELETE", "/api/me/qr");
+        setUser(user);
+      } catch (err) {
+        qrMsg(err.message);
+      }
+    });
+
   onSubmit($("#password-form"), async (v) => {
     if (v.next !== v.next2) throw new Error("Hai lần nhập mật khẩu mới không khớp");
     await api("PUT", "/api/me/password", { current: v.current, next: v.next });
@@ -171,6 +222,43 @@ function renderAccount() {
     });
     loadUsers();
   }
+}
+
+/* ----- Thu nhỏ ảnh QR trước khi gửi -----
+   Cạnh dài tối đa 1000px, nền trắng (ảnh PNG trong suốt), mã hoá lại thành PNG
+   (giữ nét cho mã QR); quá lớn thì chuyển JPEG. Mã hoá lại cũng bỏ luôn thông tin EXIF/vị trí. */
+const QR_LIMIT = 550 * 1024; // máy chủ nhận tối đa 600KB
+const dataUrlBytes = (u) => Math.floor(((u.length - u.indexOf(",") - 1) * 3) / 4);
+
+function readImage(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const im = new Image();
+    im.onload = () => { URL.revokeObjectURL(url); resolve(im); };
+    im.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Không đọc được ảnh. Hãy chọn ảnh PNG hoặc JPG.")); };
+    im.src = url;
+  });
+}
+
+async function shrinkImage(file) {
+  if (!/^image\//.test(file.type || "image/")) throw new Error("Hãy chọn một file ảnh");
+  const im = await readImage(file);
+  for (const max of [1000, 800, 600]) {
+    const k = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
+    const c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(im.naturalWidth * k));
+    c.height = Math.max(1, Math.round(im.naturalHeight * k));
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(im, 0, 0, c.width, c.height);
+    for (const [type, q] of [["image/png"], ["image/jpeg", 0.92], ["image/jpeg", 0.85]]) {
+      const url = c.toDataURL(type, q);
+      if (url.startsWith("data:" + type) && dataUrlBytes(url) <= QR_LIMIT) return url;
+    }
+  }
+  throw new Error("Ảnh quá lớn, hãy chụp màn hình mã QR rồi tải ảnh đó lên");
 }
 
 function renderLogin() {
