@@ -53,7 +53,7 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 // Người nhận tiền khi chưa đăng nhập: dùng ảnh QR gốc do ACB cấp
-const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=17" };
+const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=18" };
 
 // Người nhận tiền hiện hành. null = đã đăng nhập nhưng chưa nhập ngân hàng và chưa tải ảnh QR
 // (không rơi về tài khoản mặc định, tránh khách chuyển nhầm tiền).
@@ -91,7 +91,7 @@ function loadImg(src) {
 /* ===================== Trang Sản phẩm ===================== */
 function renderChips() {
   const wrap = $("#category-chips");
-  const chips = [{ id: "all", name: "Tất cả", color: "#0057B8" }, ...CATEGORIES];
+  const chips = [{ id: "all", name: "Tất cả", color: "#2F855A" }, ...CATEGORIES];
   wrap.innerHTML = chips
     .map(
       (c) =>
@@ -527,23 +527,23 @@ function renderBill(ctx, measure, qrImage) {
   };
   const HR = (y) => {
     if (measure) return;
-    ctx.strokeStyle = "#e6eaf0"; ctx.lineWidth = 1;
+    ctx.strokeStyle = "#dfeae1"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(PAD, y + 0.5); ctx.lineTo(W - PAD, y + 0.5); ctx.stroke();
   };
 
   let y = 0;
   const hH = 92;
   if (!measure) {
-    ctx.fillStyle = "#0057b8"; ctx.fillRect(0, 0, W, hH);
+    ctx.fillStyle = "#2f855a"; ctx.fillRect(0, 0, W, hH);
     ctx.fillStyle = "#fff"; rr(ctx, PAD, 28, 38, 38, 9); ctx.fill();
-    T("A", PAD + 19, 56, F(26, 800), "#0057b8", "center");
+    T("A", PAD + 19, 56, F(26, 800), "#2f855a", "center");
   }
   T("Amway · Đơn hàng", PAD + 52, 52, F(27, 800), "#ffffff");
   const seller = currentUser ? `Người bán: ${currentUser.name || currentUser.phone} · ${currentUser.phone}` : "Tra cứu giá & tính tiền";
   T(seller, PAD + 52, 74, F(15, 400), "rgba(255,255,255,.85)");
   y = hH + 34;
 
-  T("Ngày " + nowStr(), PAD, y, F(18, 400), "#6b7684"); y += 22;
+  T("Ngày " + nowStr(), PAD, y, F(18, 400), "#62726a"); y += 22;
   HR(y); y += 30;
 
   const priceOf = (id) => (showNpp ? PRODUCTS[id].priceNpp ?? PRODUCTS[id].price : PRODUCTS[id].price);
@@ -553,16 +553,16 @@ function renderBill(ctx, measure, qrImage) {
     const unit = priceOf(id), lt = isGift ? 0 : unit * qty;
     totalItems += qty; totalMoney += lt; totalPv += (p.pv || 0) * qty; totalBv += (p.bv || 0) * qty;
     const nameLines = wrap(`${i + 1}. ${p.name}`, F(22, 700), contentW - 140);
-    nameLines.forEach((nl) => { T(nl, PAD, y, F(22, 700), "#1b2430"); y += 28; });
-    T(`${qty} × ${fmt(unit)}`, PAD, y, F(19, 400), "#6b7684");
-    T(isGift ? "Tặng" : fmt(lt), W - PAD, y, F(21, 700), isGift ? "#16a34a" : "#003d82", "right");
+    nameLines.forEach((nl) => { T(nl, PAD, y, F(22, 700), "#1c2b22"); y += 28; });
+    T(`${qty} × ${fmt(unit)}`, PAD, y, F(19, 400), "#62726a");
+    T(isGift ? "Tặng" : fmt(lt), W - PAD, y, F(21, 700), isGift ? "#16a34a" : "#1e5c3d", "right");
     y += 32;
   });
 
   HR(y); y += 30;
   const row = (label, val, big) => {
-    T(label, PAD, y, F(big ? 23 : 19, big ? 800 : 400), big ? "#1b2430" : "#6b7684");
-    T(val, W - PAD, y, F(big ? 23 : 19, big ? 800 : 600), big ? "#003d82" : "#1b2430", "right");
+    T(label, PAD, y, F(big ? 23 : 19, big ? 800 : 400), big ? "#1c2b22" : "#62726a");
+    T(val, W - PAD, y, F(big ? 23 : 19, big ? 800 : 600), big ? "#1e5c3d" : "#1c2b22", "right");
     y += big ? 40 : 28;
   };
   row("Số mặt hàng", String(totalItems));
@@ -574,10 +574,10 @@ function renderBill(ctx, measure, qrImage) {
   row(showNpp ? "Tổng giá NPP" : "Tổng bán lẻ", fmt(totalMoney), true);
   y += 8; HR(y); y += 36;
 
-  T("Thanh toán chuyển khoản", W / 2, y, F(21, 800), "#003d82", "center"); y += 30;
+  T("Thanh toán chuyển khoản", W / 2, y, F(21, 800), "#1e5c3d", "center"); y += 30;
   const pay = payee();
   if (!pay) {
-    T("Chưa có thông tin nhận tiền", W / 2, y, F(19, 400), "#6b7684", "center"); y += 34;
+    T("Chưa có thông tin nhận tiền", W / 2, y, F(19, 400), "#62726a", "center"); y += 34;
   } else {
     // Ảnh tải lên giữ đúng tỉ lệ (rộng tối đa 360, cao tối đa 480: ảnh chụp màn hình điện thoại
     // thường rất dài); VietQR tự tạo là ô vuông 250
@@ -591,18 +591,18 @@ function renderBill(ctx, measure, qrImage) {
       const qx = (W - qw) / 2;
       if (!pay.img) drawQr(ctx, payPayload(pay, totalMoney), qx, y, qw);
       else if (qrImage) ctx.drawImage(qrImage, qx, y, qw, qh);
-      else { ctx.strokeStyle = "#e6eaf0"; ctx.strokeRect(qx, y, qw, qh); }
+      else { ctx.strokeStyle = "#dfeae1"; ctx.strokeRect(qx, y, qw, qh); }
     }
     y += qh + 30;
     // Thông tin chuyển khoản: nhãn bên trái, giá trị bên phải
     payRows(pay, totalMoney).forEach(([label, value]) => {
-      T(label, PAD, y, F(19, 400), "#6b7684");
-      T(value, W - PAD, y, F(20, 700), label === "Số tiền" ? "#003d82" : "#1b2430", "right");
+      T(label, PAD, y, F(19, 400), "#62726a");
+      T(value, W - PAD, y, F(20, 700), label === "Số tiền" ? "#1e5c3d" : "#1c2b22", "right");
       y += 30;
     });
-    T("Nội dung chuyển khoản: tên của bạn", W / 2, y + 4, F(17, 400), "#6b7684", "center"); y += 38;
+    T("Nội dung chuyển khoản: tên của bạn", W / 2, y + 4, F(17, 400), "#62726a", "center"); y += 38;
   }
-  T("Cảm ơn quý khách!", W / 2, y, F(18, 400), "#6b7684", "center"); y += 24;
+  T("Cảm ơn quý khách!", W / 2, y, F(18, 400), "#62726a", "center"); y += 24;
 
   y += PAD;
   return y;
