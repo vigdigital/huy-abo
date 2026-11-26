@@ -41,12 +41,12 @@ const imgSrc = (p) => (p.img && p.img.trim() ? p.img : placeholder(p));
 /* ===================== Trạng thái ===================== */
 let activeCategory = "all";
 let searchTerm = "";
-// Hiện giá nhà phân phối (NPP, PV/BV). Chỉ bật được khi đã đăng nhập trên VPS:
-// account.js bật theo lựa chọn đã lưu sau khi đăng nhập, công tắc nằm trong tab Tài khoản.
+// Hiện giá nhà phân phối (NPP, PV/BV). Chỉ bật được khi đã đăng nhập và được duyệt:
+// account.js tải giá từ Supabase vào PRODUCTS rồi bật theo lựa chọn đã lưu, công tắc nằm trong tab Tài khoản.
 let showNpp = false;
 const order = new Map(); // productId -> quantity
 const gifts = new Set(); // productId là hàng tặng (giá 0)
-let currentUser = null; // account.js gán khi đăng nhập (chỉ có trên VPS)
+let currentUser = null; // account.js gán khi đăng nhập (hồ sơ + qr_url)
 
 // Thoát ký tự HTML cho dữ liệu người dùng nhập
 const esc = (s) =>
@@ -62,12 +62,12 @@ function payee() {
   if (!currentUser) return DEFAULT_PAYEE;
   const u = currentUser;
   const hasBank = !!(u.bank_bin && u.bank_account);
-  if (!hasBank && !u.qr_updated) return null;
+  if (!hasBank && !u.qr_url) return null;
   return {
     bin: hasBank ? u.bank_bin : "",
     account: hasBank ? u.bank_account : "",
     holder: u.bank_holder || u.name || "",
-    img: u.qr_updated ? `/api/me/qr?v=${u.qr_updated}` : null,
+    img: u.qr_url || null,
   };
 }
 
@@ -299,6 +299,40 @@ function renderOrder() {
   renderOrderResults(); // cập nhật số "×N" trong kết quả tìm kiếm
   syncAddButtons();
   renderPayment(totalMoney);
+  if (typeof window.onOrderChange === "function") window.onOrderChange();
+}
+
+// Ảnh chụp đơn hiện tại để lưu (account.js dùng)
+function orderSnapshot() {
+  const ids = [...order.keys()];
+  const priceOf = (id) => (showNpp ? PRODUCTS[id].priceNpp ?? PRODUCTS[id].price : PRODUCTS[id].price);
+  const items = ids.map((id) => ({
+    code: PRODUCTS[id].code || "",
+    name: PRODUCTS[id].name,
+    qty: order.get(id),
+    price: priceOf(id),
+    gift: gifts.has(id),
+  }));
+  const total = items.reduce((a, it) => a + (it.gift ? 0 : it.price * it.qty), 0);
+  const totalPv = Math.round(ids.reduce((a, id) => a + (PRODUCTS[id].pv || 0) * order.get(id), 0) * 100) / 100;
+  const totalBv = ids.reduce((a, id) => a + (PRODUCTS[id].bv || 0) * order.get(id), 0);
+  return { items, total, totalPv, totalBv };
+}
+
+// Nạp lại một đơn đã lưu vào trang Đơn hàng. Trả về số sản phẩm không còn trong danh sách.
+function loadOrderItems(items) {
+  order.clear();
+  gifts.clear();
+  let missing = 0;
+  items.forEach((it) => {
+    const pid = byCode[it.code];
+    if (pid == null) return missing++;
+    order.set(pid, (order.get(pid) || 0) + (it.qty || 1));
+    if (it.gift) gifts.add(pid);
+  });
+  renderOrder();
+  showView("order");
+  return missing;
 }
 
 /* ===================== Thanh toán chuyển khoản ===================== */

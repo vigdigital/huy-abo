@@ -324,6 +324,9 @@ main { max-width: 640px; margin: 0 auto; }
 .order-actions .btn-outline,
 .order-actions .btn-block { margin-top: 0; flex: 1; min-width: 0; padding-left: 8px; padding-right: 8px; }
 .order-actions .btn-block { flex: 1.3; }
+/* Đủ 4 nút (có Lưu đơn) thì xếp 2 hàng */
+.order-actions:has(#save-order:not([hidden])) { flex-wrap: wrap; }
+.order-actions:has(#save-order:not([hidden])) > * { flex: 1 1 calc(50% - 4px); }
 .btn-outline {
   border: 1.5px solid var(--brand);
   background: #fff;
@@ -510,6 +513,29 @@ main { max-width: 640px; margin: 0 auto; }
 .tag { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 7px; border-radius: 999px; vertical-align: middle; }
 .tag-admin { color: var(--brand); background: rgba(47, 133, 90, .1); }
 .tag-lock { color: #c0392b; background: rgba(192, 57, 43, .1); }
+.tag-wait { color: #b7791f; background: rgba(214, 158, 46, .15); }
+.btn-sm.btn-ok { color: #fff; background: var(--brand); border-color: var(--brand); }
+.acc-switch { margin: 12px 0 0; text-align: center; }
+.acc-pending { border-left: 4px solid #d69e2e; }
+.acc-pending .acc-hint { margin-bottom: 8px; }
+
+/* Đơn đã lưu */
+.order-history { border-top: 1px solid var(--line); margin-top: 6px; }
+.history-row { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.history-row:last-child { border-bottom: none; }
+.history-main { font-size: 14px; display: flex; flex-direction: column; gap: 2px; }
+.history-total { color: var(--brand-dark); }
+
+/* Ô lưu đơn ở trang Đơn hàng */
+.save-order-panel {
+  margin: -6px 14px 18px;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+}
+.save-order-buttons { display: flex; gap: 8px; }
+.save-order-buttons > * { flex: 1; margin-top: 0; }
 
 /* ===== Liên kết ===== */
 .links-list { padding: 14px 14px 24px; }

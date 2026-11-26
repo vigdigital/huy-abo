@@ -79,10 +79,28 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Lưu bill
         </button>
+        <button id="save-order" class="btn-outline" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          Lưu đơn
+        </button>
         <button id="export-bill" class="btn-block" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M12 3v12M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Gửi bill
         </button>
+      </div>
+
+      <!-- Lưu đơn (chỉ tài khoản đã duyệt, account.js điều khiển) -->
+      <div id="save-order-panel" class="save-order-panel" hidden>
+        <form id="save-order-form" class="acc-form">
+          <label class="acc-field"><span>Tên khách</span><input name="customer_name" maxlength="80" placeholder="VD: Chị Lan" /></label>
+          <label class="acc-field"><span>SĐT khách (không bắt buộc)</span><input name="customer_phone" type="tel" inputmode="tel" maxlength="20" /></label>
+          <label class="acc-field"><span>Ghi chú (không bắt buộc)</span><input name="note" maxlength="300" placeholder="VD: giao thứ 7" /></label>
+          <p class="acc-msg" data-msg></p>
+          <div class="save-order-buttons">
+            <button id="save-order-cancel" class="btn-ghost" type="button">Huỷ</button>
+            <button class="btn-block" type="submit">Lưu đơn</button>
+          </div>
+        </form>
       </div>
     </section>
 
@@ -92,7 +110,7 @@
       <p id="empty-links" class="empty" hidden>Chưa có liên kết nào.</p>
     </section>
 
-    <!-- ===== Trang Tài khoản (chỉ khi chạy trên VPS, account.js điền nội dung) ===== -->
+    <!-- ===== Trang Tài khoản (khi đã cấu hình Supabase, account.js điền nội dung) ===== -->
     <section id="view-account" class="view account" hidden></section>
   </main>
 
@@ -121,6 +139,8 @@
   <script src="links.js?v=19"></script>
   <script src="assets/qrcode.js?v=19"></script>
   <script src="assets/vietqr.js?v=19"></script>
+  <script src="config.js?v=19"></script>
+  <script src="assets/supabase.js?v=19"></script>
   <script src="app.js?v=19"></script>
   <script src="account.js?v=19"></script>
 </body>
