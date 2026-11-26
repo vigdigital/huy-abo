@@ -38,6 +38,12 @@ language sql stable security definer set search_path = public as $$
   select exists (select 1 from profiles where id = auth.uid() and status = 'active');
 $$;
 
+-- Hàm kiểm tra quyền chỉ cho người đã đăng nhập gọi (dùng trong RLS)
+revoke execute on function public.is_admin() from public, anon;
+revoke execute on function public.is_active() from public, anon;
+grant execute on function public.is_admin() to authenticated;
+grant execute on function public.is_active() to authenticated;
+
 -- Tự tạo hồ sơ "chờ duyệt" khi có người đăng ký
 create or replace function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
@@ -51,6 +57,8 @@ begin
   on conflict (id) do nothing;
   return new;
 end $$;
+
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
 
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
