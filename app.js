@@ -53,7 +53,7 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 // Người nhận tiền khi chưa đăng nhập: dùng ảnh QR gốc do ACB cấp
-const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=18" };
+const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=19" };
 
 // Người nhận tiền hiện hành. null = đã đăng nhập nhưng chưa nhập ngân hàng và chưa tải ảnh QR
 // (không rơi về tài khoản mặc định, tránh khách chuyển nhầm tiền).
@@ -536,9 +536,9 @@ function renderBill(ctx, measure, qrImage) {
   if (!measure) {
     ctx.fillStyle = "#2f855a"; ctx.fillRect(0, 0, W, hH);
     ctx.fillStyle = "#fff"; rr(ctx, PAD, 28, 38, 38, 9); ctx.fill();
-    T("A", PAD + 19, 56, F(26, 800), "#2f855a", "center");
+    T("H", PAD + 19, 56, F(26, 800), "#2f855a", "center");
   }
-  T("Amway · Đơn hàng", PAD + 52, 52, F(27, 800), "#ffffff");
+  T("Huy ABO · Đơn hàng", PAD + 52, 52, F(27, 800), "#ffffff");
   const seller = currentUser ? `Người bán: ${currentUser.name || currentUser.phone} · ${currentUser.phone}` : "Tra cứu giá & tính tiền";
   T(seller, PAD + 52, 74, F(15, 400), "rgba(255,255,255,.85)");
   y = hH + 34;
