@@ -1,9 +1,10 @@
 /* ============================================================
-   DỮ LIỆU LIÊN KẾT HỮU ÍCH
+   DỮ LIỆU THƯ VIỆN (tab "Thư viện": tài liệu, video, bài viết)
    ------------------------------------------------------------
-   - Mỗi liên kết: group (id nhóm), title (tên hiển thị),
+   - Mỗi mục: group (id nhóm phân loại), title (tên hiển thị),
      url (https://...), note (ghi chú ngắn, tùy chọn).
-   - Thêm nhóm: thêm một dòng trong LINK_GROUPS (id không dấu, không trùng).
+   - Thêm nhóm phân loại: thêm một dòng trong LINK_GROUPS (id không dấu, không trùng).
+     Nhóm chưa có mục nào thì tự ẩn trong tab Thư viện.
    - Thêm link: thêm một dòng { ... } vào LINKS.
    ============================================================ */
 

@@ -4,15 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#2F855A" />
-  <title>Tra cứu giá Amway</title>
-  <link rel="stylesheet" href="styles.css?v=18" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%232F855A%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>A</text></svg>" />
+  <title>Huy ABO</title>
+  <meta name="apple-mobile-web-app-title" content="Huy ABO" />
+  <meta name="application-name" content="Huy ABO" />
+  <link rel="stylesheet" href="styles.css?v=20" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%232F855A%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial%22 font-weight=%22bold%22>H</text></svg>" />
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <span class="brand-mark">A</span>
-      <span class="brand-name">Amway · Tra cứu giá</span>
+      <span class="brand-mark">H</span>
+      <span class="brand-name">Huy ABO</span>
     </div>
   </header>
 
@@ -77,20 +79,45 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Lưu bill
         </button>
+        <button id="save-order" class="btn-outline" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5zM8 4v5h7V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          Lưu đơn
+        </button>
         <button id="export-bill" class="btn-block" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M12 3v12M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Gửi bill
         </button>
       </div>
+
+      <!-- Lưu đơn (chỉ tài khoản đã duyệt, account.js điều khiển) -->
+      <div id="save-order-panel" class="save-order-panel" hidden>
+        <form id="save-order-form" class="acc-form">
+          <label class="acc-field"><span>Tên khách</span><input name="customer_name" maxlength="80" placeholder="VD: Chị Lan" /></label>
+          <label class="acc-field"><span>SĐT khách (không bắt buộc)</span><input name="customer_phone" type="tel" inputmode="tel" maxlength="20" /></label>
+          <label class="acc-field"><span>Ghi chú (không bắt buộc)</span><input name="note" maxlength="300" placeholder="VD: giao thứ 7" /></label>
+          <p class="acc-msg" data-msg></p>
+          <div class="save-order-buttons">
+            <button id="save-order-cancel" class="btn-ghost" type="button">Huỷ</button>
+            <button class="btn-block" type="submit">Lưu đơn</button>
+          </div>
+        </form>
+      </div>
     </section>
 
-    <!-- ===== Trang Liên kết ===== -->
+    <!-- ===== Trang Thư viện (tài liệu, video, bài viết; dữ liệu trong links.js) ===== -->
     <section id="view-links" class="view" hidden>
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" class="search-ico" aria-hidden="true"><path d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="lib-search" type="search" inputmode="search" placeholder="Tìm trong thư viện..." autocomplete="off" />
+        </div>
+        <div id="lib-chips" class="chips"></div>
+      </div>
       <div id="links-list" class="links-list"></div>
-      <p id="empty-links" class="empty" hidden>Chưa có liên kết nào.</p>
+      <p id="empty-links" class="empty" hidden>Không tìm thấy tài liệu phù hợp.</p>
     </section>
 
-    <!-- ===== Trang Tài khoản (chỉ khi chạy trên VPS, account.js điền nội dung) ===== -->
+    <!-- ===== Trang Tài khoản (khi đã cấu hình Supabase, account.js điền nội dung) ===== -->
     <section id="view-account" class="view account" hidden></section>
   </main>
 
@@ -106,8 +133,8 @@
       <span id="cart-badge" class="badge" hidden>0</span>
     </button>
     <button class="tab" data-view="links" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 007.07 0l2-2a5 5 0 00-7.07-7.07l-1.1 1.1M14 11a5 5 0 00-7.07 0l-2 2a5 5 0 007.07 7.07l1.1-1.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Liên kết</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 012-2h4v18H6a2 2 0 01-2-2zM10 3h4v18h-4zM15 4.5l3.8-1 3 15.5-3.8 1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      <span>Thư viện</span>
     </button>
     <button class="tab" id="tab-account" data-view="account" type="button" hidden>
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21a8 8 0 0116 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -115,11 +142,13 @@
     </button>
   </nav>
 
-  <script src="data.js?v=18"></script>
-  <script src="links.js?v=18"></script>
-  <script src="assets/qrcode.js?v=18"></script>
-  <script src="assets/vietqr.js?v=18"></script>
-  <script src="app.js?v=18"></script>
-  <script src="account.js?v=18"></script>
+  <script src="data.js?v=20"></script>
+  <script src="links.js?v=20"></script>
+  <script src="assets/qrcode.js?v=20"></script>
+  <script src="assets/vietqr.js?v=20"></script>
+  <script src="config.js?v=20"></script>
+  <script src="assets/supabase.js?v=20"></script>
+  <script src="app.js?v=20"></script>
+  <script src="account.js?v=20"></script>
 </body>
 </html>

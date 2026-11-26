@@ -41,19 +41,19 @@ const imgSrc = (p) => (p.img && p.img.trim() ? p.img : placeholder(p));
 /* ===================== Trạng thái ===================== */
 let activeCategory = "all";
 let searchTerm = "";
-// Hiện giá nhà phân phối (NPP, PV/BV). Chỉ bật được khi đã đăng nhập trên VPS:
-// account.js bật theo lựa chọn đã lưu sau khi đăng nhập, công tắc nằm trong tab Tài khoản.
+// Hiện giá nhà phân phối (NPP, PV/BV). Chỉ bật được khi đã đăng nhập và được duyệt:
+// account.js tải giá từ Supabase vào PRODUCTS rồi bật theo lựa chọn đã lưu, công tắc nằm trong tab Tài khoản.
 let showNpp = false;
 const order = new Map(); // productId -> quantity
 const gifts = new Set(); // productId là hàng tặng (giá 0)
-let currentUser = null; // account.js gán khi đăng nhập (chỉ có trên VPS)
+let currentUser = null; // account.js gán khi đăng nhập (hồ sơ + qr_url)
 
 // Thoát ký tự HTML cho dữ liệu người dùng nhập
 const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 // Người nhận tiền khi chưa đăng nhập: dùng ảnh QR gốc do ACB cấp
-const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=18" };
+const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=20" };
 
 // Người nhận tiền hiện hành. null = đã đăng nhập nhưng chưa nhập ngân hàng và chưa tải ảnh QR
 // (không rơi về tài khoản mặc định, tránh khách chuyển nhầm tiền).
@@ -62,12 +62,12 @@ function payee() {
   if (!currentUser) return DEFAULT_PAYEE;
   const u = currentUser;
   const hasBank = !!(u.bank_bin && u.bank_account);
-  if (!hasBank && !u.qr_updated) return null;
+  if (!hasBank && !u.qr_url) return null;
   return {
     bin: hasBank ? u.bank_bin : "",
     account: hasBank ? u.bank_account : "",
     holder: u.bank_holder || u.name || "",
-    img: u.qr_updated ? `/api/me/qr?v=${u.qr_updated}` : null,
+    img: u.qr_url || null,
   };
 }
 
@@ -299,6 +299,40 @@ function renderOrder() {
   renderOrderResults(); // cập nhật số "×N" trong kết quả tìm kiếm
   syncAddButtons();
   renderPayment(totalMoney);
+  if (typeof window.onOrderChange === "function") window.onOrderChange();
+}
+
+// Ảnh chụp đơn hiện tại để lưu (account.js dùng)
+function orderSnapshot() {
+  const ids = [...order.keys()];
+  const priceOf = (id) => (showNpp ? PRODUCTS[id].priceNpp ?? PRODUCTS[id].price : PRODUCTS[id].price);
+  const items = ids.map((id) => ({
+    code: PRODUCTS[id].code || "",
+    name: PRODUCTS[id].name,
+    qty: order.get(id),
+    price: priceOf(id),
+    gift: gifts.has(id),
+  }));
+  const total = items.reduce((a, it) => a + (it.gift ? 0 : it.price * it.qty), 0);
+  const totalPv = Math.round(ids.reduce((a, id) => a + (PRODUCTS[id].pv || 0) * order.get(id), 0) * 100) / 100;
+  const totalBv = ids.reduce((a, id) => a + (PRODUCTS[id].bv || 0) * order.get(id), 0);
+  return { items, total, totalPv, totalBv };
+}
+
+// Nạp lại một đơn đã lưu vào trang Đơn hàng. Trả về số sản phẩm không còn trong danh sách.
+function loadOrderItems(items) {
+  order.clear();
+  gifts.clear();
+  let missing = 0;
+  items.forEach((it) => {
+    const pid = byCode[it.code];
+    if (pid == null) return missing++;
+    order.set(pid, (order.get(pid) || 0) + (it.qty || 1));
+    if (it.gift) gifts.add(pid);
+  });
+  renderOrder();
+  showView("order");
+  return missing;
 }
 
 /* ===================== Thanh toán chuyển khoản ===================== */
@@ -395,7 +429,7 @@ function loadTemplate(id) {
   showView("order");
 }
 
-/* ===================== Liên kết ===================== */
+/* ===================== Thư viện ===================== */
 function hostOf(url) {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -404,16 +438,38 @@ function hostOf(url) {
   }
 }
 
+let libGroup = "all";
+let libTerm = "";
+
+function renderLibChips() {
+  const wrap = $("#lib-chips");
+  if (!wrap || typeof LINKS === "undefined") return;
+  // Chỉ hiện nhóm đang có tài liệu, kèm số lượng
+  const groups = LINK_GROUPS.map((g) => ({ ...g, n: LINKS.filter((l) => l.group === g.id).length })).filter((g) => g.n);
+  const chips = [{ id: "all", name: "Tất cả", n: LINKS.length }, ...groups];
+  wrap.innerHTML = chips
+    .map((c) => `<button class="chip ${c.id === libGroup ? "active" : ""}" data-lib="${c.id}">${c.name} <span class="chip-n">${c.n}</span></button>`)
+    .join("");
+  $$(".chip", wrap).forEach((btn) =>
+    btn.addEventListener("click", () => {
+      libGroup = btn.dataset.lib;
+      renderLibChips();
+      renderLinks();
+    })
+  );
+}
+
 function renderLinks() {
   if (typeof LINKS === "undefined") return;
   const wrap = $("#links-list");
-  $("#empty-links").hidden = LINKS.length !== 0;
-  const groups = LINK_GROUPS.filter((g) => LINKS.some((l) => l.group === g.id));
-  wrap.innerHTML = groups
-    .map((g) => {
-      const items = LINKS.filter((l) => l.group === g.id)
-        .map(
-          (l) => `
+  const t = norm(libTerm.trim());
+  const shown = LINKS.filter(
+    (l) => (libGroup === "all" || l.group === libGroup) && (!t || norm(l.title + " " + (l.note || "")).includes(t))
+  );
+  $("#empty-links").hidden = shown.length !== 0;
+  // "Tất cả": chia theo nhóm có tiêu đề; chọn một nhóm: danh sách liền
+  const groups = LINK_GROUPS.filter((g) => shown.some((l) => l.group === g.id));
+  const card = (l) => `
         <a class="link-card" href="${l.url}" target="_blank" rel="noopener">
           <div class="link-main">
             <span class="link-title">${l.title}</span>
@@ -421,13 +477,20 @@ function renderLinks() {
             <span class="link-url">${hostOf(l.url)}</span>
           </div>
           <svg class="link-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>`
-        )
-        .join("");
-      return `<section class="link-group"><h2 class="link-group-title">${g.name}</h2>${items}</section>`;
+        </a>`;
+  wrap.innerHTML = groups
+    .map((g) => {
+      const items = shown.filter((l) => l.group === g.id).map(card).join("");
+      const title = libGroup === "all" ? `<h2 class="link-group-title">${g.name}</h2>` : "";
+      return `<section class="link-group">${title}${items}</section>`;
     })
     .join("");
 }
+
+$("#lib-search").addEventListener("input", (e) => {
+  libTerm = e.target.value;
+  renderLinks();
+});
 
 /* ===================== Điều hướng tab ===================== */
 function showView(view) {
@@ -536,9 +599,9 @@ function renderBill(ctx, measure, qrImage) {
   if (!measure) {
     ctx.fillStyle = "#2f855a"; ctx.fillRect(0, 0, W, hH);
     ctx.fillStyle = "#fff"; rr(ctx, PAD, 28, 38, 38, 9); ctx.fill();
-    T("A", PAD + 19, 56, F(26, 800), "#2f855a", "center");
+    T("H", PAD + 19, 56, F(26, 800), "#2f855a", "center");
   }
-  T("Amway · Đơn hàng", PAD + 52, 52, F(27, 800), "#ffffff");
+  T("Huy ABO · Đơn hàng", PAD + 52, 52, F(27, 800), "#ffffff");
   const seller = currentUser ? `Người bán: ${currentUser.name || currentUser.phone} · ${currentUser.phone}` : "Tra cứu giá & tính tiền";
   T(seller, PAD + 52, 74, F(15, 400), "rgba(255,255,255,.85)");
   y = hH + 34;
@@ -668,4 +731,5 @@ renderChips();
 renderProducts();
 renderTemplates();
 renderOrder();
+renderLibChips();
 renderLinks();
