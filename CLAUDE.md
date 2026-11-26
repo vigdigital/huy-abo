@@ -21,7 +21,7 @@ Công cụ tra cứu giá sản phẩm Amway và tính tiền đơn hàng, tối
 
 - Sản phẩm mới: thêm vào `PRODUCTS` theo mẫu có sẵn (`category, name, code, price, img, link`). Giá là số nguyên VNĐ không dấu chấm. Link sản phẩm: `https://www.amway.com.vn/vn/p/<mã>`.
 - Giá NPP/PV/BV **không bao giờ** đưa vào repo (repo công khai): upsert vào bảng `product_prices` trên Supabase theo `code`.
-- Liên kết mới: thêm vào `LINKS` với `group` là id trong `LINK_GROUPS`.
+- Tab **Thư viện** (trước là "Liên kết"): mục mới thêm vào `LINKS` trong `links.js`, `group` là id trong `LINK_GROUPS` (nhóm phân loại hiện thành nút lọc).
 
 ## Quy tắc bắt buộc
 

@@ -53,7 +53,7 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 // Người nhận tiền khi chưa đăng nhập: dùng ảnh QR gốc do ACB cấp
-const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=19" };
+const DEFAULT_PAYEE = { bin: "970416", account: "140161319", holder: "Võ Minh Huy", img: "assets/qr-acb.jpg?v=20" };
 
 // Người nhận tiền hiện hành. null = đã đăng nhập nhưng chưa nhập ngân hàng và chưa tải ảnh QR
 // (không rơi về tài khoản mặc định, tránh khách chuyển nhầm tiền).
@@ -429,7 +429,7 @@ function loadTemplate(id) {
   showView("order");
 }
 
-/* ===================== Liên kết ===================== */
+/* ===================== Thư viện ===================== */
 function hostOf(url) {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -438,16 +438,38 @@ function hostOf(url) {
   }
 }
 
+let libGroup = "all";
+let libTerm = "";
+
+function renderLibChips() {
+  const wrap = $("#lib-chips");
+  if (!wrap || typeof LINKS === "undefined") return;
+  // Chỉ hiện nhóm đang có tài liệu, kèm số lượng
+  const groups = LINK_GROUPS.map((g) => ({ ...g, n: LINKS.filter((l) => l.group === g.id).length })).filter((g) => g.n);
+  const chips = [{ id: "all", name: "Tất cả", n: LINKS.length }, ...groups];
+  wrap.innerHTML = chips
+    .map((c) => `<button class="chip ${c.id === libGroup ? "active" : ""}" data-lib="${c.id}">${c.name} <span class="chip-n">${c.n}</span></button>`)
+    .join("");
+  $$(".chip", wrap).forEach((btn) =>
+    btn.addEventListener("click", () => {
+      libGroup = btn.dataset.lib;
+      renderLibChips();
+      renderLinks();
+    })
+  );
+}
+
 function renderLinks() {
   if (typeof LINKS === "undefined") return;
   const wrap = $("#links-list");
-  $("#empty-links").hidden = LINKS.length !== 0;
-  const groups = LINK_GROUPS.filter((g) => LINKS.some((l) => l.group === g.id));
-  wrap.innerHTML = groups
-    .map((g) => {
-      const items = LINKS.filter((l) => l.group === g.id)
-        .map(
-          (l) => `
+  const t = norm(libTerm.trim());
+  const shown = LINKS.filter(
+    (l) => (libGroup === "all" || l.group === libGroup) && (!t || norm(l.title + " " + (l.note || "")).includes(t))
+  );
+  $("#empty-links").hidden = shown.length !== 0;
+  // "Tất cả": chia theo nhóm có tiêu đề; chọn một nhóm: danh sách liền
+  const groups = LINK_GROUPS.filter((g) => shown.some((l) => l.group === g.id));
+  const card = (l) => `
         <a class="link-card" href="${l.url}" target="_blank" rel="noopener">
           <div class="link-main">
             <span class="link-title">${l.title}</span>
@@ -455,13 +477,20 @@ function renderLinks() {
             <span class="link-url">${hostOf(l.url)}</span>
           </div>
           <svg class="link-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>`
-        )
-        .join("");
-      return `<section class="link-group"><h2 class="link-group-title">${g.name}</h2>${items}</section>`;
+        </a>`;
+  wrap.innerHTML = groups
+    .map((g) => {
+      const items = shown.filter((l) => l.group === g.id).map(card).join("");
+      const title = libGroup === "all" ? `<h2 class="link-group-title">${g.name}</h2>` : "";
+      return `<section class="link-group">${title}${items}</section>`;
     })
     .join("");
 }
+
+$("#lib-search").addEventListener("input", (e) => {
+  libTerm = e.target.value;
+  renderLinks();
+});
 
 /* ===================== Điều hướng tab ===================== */
 function showView(view) {
@@ -702,4 +731,5 @@ renderChips();
 renderProducts();
 renderTemplates();
 renderOrder();
+renderLibChips();
 renderLinks();
